@@ -24,6 +24,10 @@ Route::get('/medicines', function () {
     return view('medicines');
 });
 
+Route::get('/medicine-buy', function () {
+    return view('medicineBuy'); // This should match the name of your blade file without the .blade.php extension
+})->name('medicineBuy');
+
 Route::get('/doctors', function () {
     return view('doctors');
 });

@@ -112,15 +112,7 @@
       </div>
 
     </div>
-    
-
-            
-
-  </header>
-
-  <main class="main">
-
-  <style>
+ <style>
 /* Global Styles */
 
 * {
@@ -196,65 +188,84 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background-color: #3e8e41;
 }
-    </style>
-    
-<section id="hero" class="hero section light-background">
 
-<div class="welcome position-relative" data-aos="fade-down" data-aos-delay="100">
-<!-- Appointment Section -->
+/*--------------------------------------------------------------
+# Services Section
+--------------------------------------------------------------*/
+.services .service-item {
+    background-color: var(--surface-color);
+    box-shadow: 0px 5px 90px 0px rgba(0, 0, 0, 0.1);
+    padding: 60px 30px;
+    transition: all ease-in-out 0.3s;
+    border-radius: 18px;
+    border-bottom: 5px solid var(--surface-color);
+    height: 100%;
+}
 
-<!-- Section Title -->
-<div class="container section-title" data-aos="fade-up">
-<h2>Gamot Padala</h2>
-<p style="font-size: 13px;">Enjoy the convenience and reliability of our Gamot Padala service. We ensure your medications are securely packaged and delivered promptly to your doorstep, providing peace of mind and enhancing your healthcare experience.</p>
-        </br></br>
-        </div>
-<div class="container" data-aos="fade-up" data-aos-delay="100">
+.services .service-item .icon {
+    color: var(--contrast-color);
+    background: var(--accent-color);
+    margin: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+    transition: ease-in-out 0.3s;
+}
 
-  <form action="forms/appointment.php" method="post" role="form" class="php-email-form">
-    <div class="row">
-      <div>
-        <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required="">
-      </div>
-      <div>
-        <input type="text" class="form-control" name="email" id="email" placeholder="Your Address" required="">
-      </div>
-      <div>
-        <input type="tel" class="form-control" name="phone" id="phone" placeholder="Your Phone" required="">
-      </div>
+.services .service-item h3 {
+    font-weight: 700;
+    margin: 10px 0 15px 0;
+    font-size: 22px;
+    transition: ease-in-out 0.3s;
+}
+
+.services .service-item p {
+    line-height: 24px;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+@media (min-width: 1365px) {
+    .services .service-item:hover {
+        transform: translateY(-10px);
+        border-color: var(--accent-color);
+    }
+
+    .services .service-item:hover h3 {
+        color: var(--accent-color);
+    }
+}
+
+    </style>   
+  </header>
+
+  <main class="main">
+<!-- Blogs Section -->
+<section id="hero" class="services section" style="padding-top:10%;">
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Gamot Padala</h2>
+  </div>
+  <div class="container" style="width: 80%;margin: 0 auto; display: block;">
+  <div class="row gy-4">
+           <div>
+            <div class="service-item position-relative">
+              <h3>Paracetamol Biogesic</h3>
+              <img src="assets/img/Biogesic.png" alt="Biogesic" width="500" height="600">
+              <p>Price: ₱62.00</p>
+              <p>description</p>
+            </div>
     </div>
-    <div class="row">
-    <div>
-        <select name="department" id="department" class="form-select" required="">
-          <option value="">Choose Medicine</option>
-          <option value="Department 1">Biogesic</option>
-          <option value="Department 2">Bioflu</option>
-          <option value="Department 3">Neozep</option>
-        </select>
-      </div>
-      <div >
-        <input type="number" name="number" class="form-control datepicker" id="date" placeholder="Quantity" required="">
-      </div>
-    
-    </div>
-
-    <div class="form-group mt-3">
-      <textarea class="form-control" name="message" rows="5" placeholder="Message (Optional)"></textarea>
-    </div>
-    <div class="mt-3">
-      <div class="loading">Loading</div>
-      <div class="error-message"></div>
-      <div class="sent-message">Your order is being processed. Thank you!</div>
-      <div class="text-center"><button type="submit">Place Order</button></div>
-    </div>
-  </form>
-
+  </div>
 </div>
-      
-        </section><!-- /Hero Section -->
-
-  </main>
-
+</section>
+<!-- /Services Section -->
+    </main>
   <footer id="footer" class="footer light-background">
 
     <div class="container footer-top">
