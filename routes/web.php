@@ -21,12 +21,6 @@ Route::get('/about', function () {
     return view('about');
 });
 
-Route::get('/medicines', [MedicineController::class, 'index'])->name('medicines.index');
-
-Route::get('/medicine-buy', function () {
-    return view('medicineBuy'); // This should match the name of your blade file without the .blade.php extension
-})->name('medicineBuy');
-
 Route::get('/doctors', function () {
     return view('doctors');
 });
@@ -35,8 +29,13 @@ Route::get('/services', function () {
     return view('services');
 });
 
-Route::get('/medicines/create', [MedicineController::class, 'create'])->name('medicines.create');
+
+Route::get('/medicines', [MedicineController::class, 'index'])->name('medicines.index');
+Route::resource('medicines', MedicineController::class);
+Route::get('/create', [MedicineController::class, 'create'])->name('medicines.create');
 Route::post('/medicines', [MedicineController::class, 'store'])->name('medicines.store');
+Route::get('/medicines/{id}/show', [MedicineController::class, 'show'])->name('medicine.show');
+
 
 Route::middleware([
     'auth:sanctum',

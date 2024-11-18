@@ -22,8 +22,8 @@
         
 
   <!-- Favicons -->
-  <link href="assets/img/drug.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="/assets/img/drug.png" rel="icon">
+  <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -31,15 +31,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="/assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: Medilab
@@ -72,7 +72,7 @@
     <div class="branding d-flex align-items-center">
 
     <div class="container position-relative d-flex align-items-center justify-content-between">
-      <img src="assets/img/drug.png" alt="logo" width="60" height="75" >
+      <img src="/assets/img/drug.png" alt="logo" width="60" height="75" >
       <a href="index.html" class="logo align-items-center me-auto">
           <!-- Uncomment the line below if you also wish to use an image logo -->
           
@@ -192,6 +192,28 @@ button[type="submit"]:hover {
 /*--------------------------------------------------------------
 # Services Section
 --------------------------------------------------------------*/
+.services .service-item:hover {
+  background: white;
+  border-color: white;
+}
+
+.services .service-item:hover .icon {
+  background: var(--surface-color);
+}
+
+.services .service-item:hover .icon i {
+  color: var(--accent-color);
+}
+
+.services .service-item:hover .icon::before {
+  background: color-mix(in srgb, var(--background-color), transparent 70%);
+}
+
+.services .service-item:hover h3,
+.services .service-item:hover p {
+  color: black;
+}
+
 .services .service-item {
     background-color: var(--surface-color);
     box-shadow: 0px 5px 90px 0px rgba(0, 0, 0, 0.1);
@@ -230,42 +252,47 @@ button[type="submit"]:hover {
     margin-bottom: 0;
 }
 
-@media (min-width: 1365px) {
-    .services .service-item:hover {
-        transform: translateY(-10px);
-        border-color: var(--accent-color);
-    }
-
-    .services .service-item:hover h3 {
-        color: var(--accent-color);
-    }
-}
-
     </style>   
   </header>
 
   <main class="main">
-<!-- Blogs Section -->
-<section id="hero" class="services section" style="padding-top:10%;">
-  <!-- Section Title -->
-  <div class="container section-title" data-aos="fade-up">
-    <h2>Gamot Padala</h2>
-  </div>
-  <div class="container" style="width: 80%;margin: 0 auto; display: block;">
-  <div class="row gy-4">
-           <div>
-            <div class="service-item position-relative">
-              <h3>Paracetamol Biogesic</h3>
-              <img src="assets/img/Biogesic.png" alt="Biogesic" width="500" height="600">
-              <p>Price: ₱62.00</p>
-              <p>description</p>
-            </div>
+    <section id="hero" class="services section" style="padding-top:10%;">
+      
+        <div class="container section-title" data-aos="fade-up">
+            <h2>{{ $medicine->name }}</h2> <!-- Display the medicine name -->
+        </div>
+
+        <div class="container" style="width: 80%; margin: 0 auto; display: block;">
+            <div class="row gy-4">
+
+            <div class="col-lg-8 col-md-6">
+                    <div class="service-item position-relative">
+                        <img src="{{ asset('images/' . $medicine->image) }}" alt="{{ $medicine->name }}" width="100%">
+                        <br><br>
+                        <p>Price: ₱{{ number_format($medicine->price, 2) }}</p>
+                        <p>Description: {{ $medicine->description }}</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+    <div class="service-item position-relative">
+        <div class="button-group">
+            <button class="btn btn-primary">Add to Cart</button>
+            <button class="btn btn-success">Buy Now</button>
+            <br><br>
+
+            <p>Admin Controls</p>
+            <button class="btn btn-warning">Edit</button>
+            <button class="btn btn-danger">Delete</button>
+        </div>
     </div>
-  </div>
 </div>
-</section>
-<!-- /Services Section -->
-    </main>
+
+            </div>
+        </div>
+    </section>
+</main>
+
   <footer id="footer" class="footer light-background">
 
     <div class="container footer-top">
@@ -356,15 +383,15 @@ button[type="submit"]:hover {
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/vendor/php-email-form/validate.js"></script>
+  <script src="/assets/vendor/aos/aos.js"></script>
+  <script src="/assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
 
   <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
+  <script src="/assets/js/main.js"></script>
 
 </body>
 

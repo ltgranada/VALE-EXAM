@@ -51,4 +51,13 @@ class MedicineController extends Controller
 
         return redirect()->route('medicines.index')->with('success', 'Medicine created successfully!');
     }
+
+    public function show($id)
+{
+    // Fetch the medicine by ID
+    $medicine = Medicine::findOrFail($id);
+
+    // Pass the medicine to the view
+    return view('medicine-show', compact('medicine'));
+}
 }
