@@ -263,22 +263,22 @@ button[type="submit"]:hover {
   </div>
 
   <div style="display: flex; justify-content: center; align-items: center; margin-left: auto; margin-right: auto; width: 33.33%;" data-aos="fade-up">
-  <form method="POST" action="{{ route('medicines.store') }}">
+  <form action="{{ route('medicines.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
 
     <label for="name">Medicine Name:</label>
-    <input class="form-control" type="text" id="name" name="name" style="width: 600px; margin-bottom: 15px" required>
+    <input class="form-control" type="text" name="name" style="width: 600px; margin-bottom: 15px" required>
 
     <label for="price">Price:</label>
-    <input class="form-control" type="text" id="price" name="price" style="width: 600px; margin-bottom: 15px" required>
+    <input class="form-control" type="text" name="price" style="width: 600px; margin-bottom: 15px" required>
 
     <label for="description">Description:</label>
-    <textarea class="form-control" id="description" name="description" style="margin-bottom: 30px; height: 150px;" required></textarea>
+    <textarea class="form-control" name="description" style="margin-bottom: 30px; height: 150px;" required></textarea>
 
     <label for="image">Image</label>
-    <input type="file" name="image" id="image" class="form-control">
+    <input type="file" name="image" class="form-control">
 
-    <button type="submit" style="color: var(--contrast-color); background: var(--accent-color); border: 0; padding: 10px 30px; transition: 0.4s; border-radius: 4px;">Create</button>
+    <button type="submit" style="color: var(--contrast-color); background: var(--accent-color); border: 0; padding: 10px 30px; transition: 0.4s; border-radius: 4px;">Create Medicine</button>
 </form>
   </div>
 </section>
