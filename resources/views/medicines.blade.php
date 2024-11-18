@@ -246,7 +246,7 @@ button[type="submit"]:hover {
 
   <main class="main">
     <!-- Gamot Padala Section -->
-    <section id="hero" class="services section" style="padding-top:10%;">
+    <section id="hero" class="services section">
         <!-- Section Title -->
         <div class="container section-title" data-aos="fade-up">
             <h2>Gamot Padala</h2>

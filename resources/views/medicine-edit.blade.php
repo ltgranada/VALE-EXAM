@@ -256,41 +256,36 @@ button[type="submit"]:hover {
   </header>
 
   <main class="main">
-    <section id="hero" class="services section" style="padding-top:10%;">
-        <div class="container section-title" data-aos="fade-up">
-            <h2>Edit Medicine</h2>
-        </div>
+<!-- Medicine Section -->
+<section id="hero" class="services section">
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Edit Medicine </h2>
+  </div>
 
-        <div class="container">
-            <form action="{{ route('medicines.update', $medicine->id) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method(' PUT')
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" name="name" class="form-control" value="{{ $medicine->name }}" required>
-                </div>
+  <div style="display: flex; justify-content: center; align-items: center; margin-left: auto; margin-right: auto; width: 33.33%;" data-aos="fade-up">
+  <form action="{{ route('medicines.update', $medicine->id) }}" method="POST" enctype="multipart/form-data">
+      @csrf
+      @method(' PUT')
 
-                <div class="form-group">
-                    <label for="price">Price</label>
-                    <input type="number" name="price" class="form-control" value="{{ $medicine->price }}" required>
-                </div>
+    <label for="name">Medicine Name:</label>
+    <input class="form-control" type="text" name="name" style="width: 600px; margin-bottom: 15px" value="{{ $medicine->name }}" required>
 
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea name="description" class="form-control" required>{{ $medicine->description }}</textarea>
-                </div>
+    <label for="price">Price:</label>
+    <input class="form-control" type="text" name="price" style="width: 600px; margin-bottom: 15px" value="{{ $medicine->price }}" required>
 
-                <div class="form-group">
-                    <label for="image">Image</label>
-                    <input type="file" name="image" class="form-control">
-                    <small>Leave blank to keep the current image.</small>
-                </div>
+    <label for="description">Description:</label>
+    <textarea class="form-control" name="description" style="margin-bottom: 30px; height: 150px;" required> {{ $medicine->description }}</textarea>
 
-                <button type="submit" class="btn btn-primary">Update Medicine</button>
-            </form>
-        </div>
-    </section>
-</main>
+    <label for="image">Image</label>
+    <input type="file" name="image" class="form-control">
+    <small>Leave blank to keep the current image.</small>
+  <br><br>
+    <button type="submit" style="color: var(--contrast-color); background: var(--accent-color); border: 0; padding: 10px 30px; transition: 0.4s; border-radius: 4px;">Create</button>
+</form>
+  </div>
+</section>
+<!-- /Services Section -->
+    </main>
 
   <footer id="footer" class="footer light-background">
 

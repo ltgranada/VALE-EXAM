@@ -256,7 +256,7 @@ button[type="submit"]:hover {
   </header>
 
   <main class="main">
-    <section id="hero" class="services section" style="padding-top:10%;">
+    <section id="hero" class="services section">
       
         <div class="container section-title" data-aos="fade-up">
             <h2>{{ $medicine->name }}</h2> <!-- Display the medicine name -->
