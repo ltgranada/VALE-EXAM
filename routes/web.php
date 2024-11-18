@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\MedicineController;
 use App\Http\Middleware\EnsureTokenIsValid;
 use App\Http\Middleware\CheckAge;
 use App\Http\Middleware\Admin;
@@ -20,9 +21,7 @@ Route::get('/about', function () {
     return view('about');
 });
 
-Route::get('/medicines', function () {
-    return view('medicines');
-});
+Route::get('/medicines', [MedicineController::class, 'index'])->name('medicines.index');
 
 Route::get('/medicine-buy', function () {
     return view('medicineBuy'); // This should match the name of your blade file without the .blade.php extension
@@ -35,6 +34,9 @@ Route::get('/doctors', function () {
 Route::get('/services', function () {
     return view('services');
 });
+
+Route::get('/medicines/create', [MedicineController::class, 'create'])->name('medicines.create');
+Route::post('/medicines', [MedicineController::class, 'store'])->name('medicines.store');
 
 Route::middleware([
     'auth:sanctum',

@@ -245,38 +245,39 @@ button[type="submit"]:hover {
   </header>
 
   <main class="main">
-      <!-- Gamot Padala Section -->
-      <section id="hero" class="services section" style="padding-top:10%;">
+    <!-- Gamot Padala Section -->
+    <section id="hero" class="services section" style="padding-top:10%;">
         <!-- Section Title -->
         <div class="container section-title" data-aos="fade-up">
-          <h2>Gamot Padala</h2>
-          <p>
-          Enjoy the convenience and reliability of our Gamot Padala service. We ensure your medications are securely packaged and delivered promptly to your doorstep, providing peace of mind and enhancing your healthcare experience.
-          </p>
+            <h2>Gamot Padala</h2>
+            <p>
+                Enjoy the convenience and reliability of our Gamot Padala service. We ensure your medications are securely packaged and delivered promptly to your doorstep, providing peace of mind and enhancing your healthcare experience.
+            </p>
         </div>
         <!-- End Section Title -->
 
         <div class="container">
-  <div class="row gy-4">
-    <a href="{{ route('medicineBuy') }}" class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100" style="text-decoration: none;">
-      <div class="service-item position-relative">
-        <div class="info">
-          <img src="assets/img/Biogesic.png" alt="Biogesic" width="500" height="600">
-          <p>Name: Paracetamol Biogesic</p>
-          <p>Price: ₱62.00</p>
-        </div>
-      </div>
-    </a>
-  </div>
+    <div class="row gy-4">
+        @foreach ($medicines as $medicine)
+            <a href="{{ route('medicineBuy', ['id' => $medicine->id]) }}" class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100" style="text-decoration: none;">
+                <div class="service-item position-relative">
+                    <div class="info">
+                        @if($medicine->image)
+                            <img src="{{ asset('images/' . $medicine->image) }}" alt="{{ $medicine->name }}" width="100%">
+                        @else
+                            <p>No image available.</p>
+                        @endif
+                        <p>Name: {{ $medicine->name }}</p>
+                        <p>Price: ₱{{ number_format($medicine->price, 2) }}</p>
+                    </div>
+                </div>
+            </a>
+        @endforeach
+    </div>
 </div>
-              </div>
-            </div>
-            <!-- End Service Item -->
-          </div>
-        </div>
-      </section>
-      <!-- /Services Section -->
-    </main>
+    </section>
+    <!-- /Services Section -->
+</main>
 
   <footer id="footer" class="footer light-background">
 
