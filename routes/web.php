@@ -35,6 +35,9 @@ Route::resource('medicines', MedicineController::class);
 Route::get('/create', [MedicineController::class, 'create'])->name('medicines.create');
 Route::post('/medicines', [MedicineController::class, 'store'])->name('medicines.store');
 Route::get('/medicines/{id}/show', [MedicineController::class, 'show'])->name('medicine.show');
+Route::get('/medicines/{id}/edit', [MedicineController::class, 'edit'])->name('medicines.edit');
+Route::put('/medicines/{id}', [MedicineController::class, 'update'])->name('medicines.update');
+Route::delete('/medicines/{id}', [MedicineController::class, 'destroy'])->name('medicines.destroy');
 
 
 Route::middleware([

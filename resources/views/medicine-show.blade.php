@@ -276,15 +276,19 @@ button[type="submit"]:hover {
 
                 <div class="col-lg-4 col-md-6">
     <div class="service-item position-relative">
-        <div class="button-group">
-            <button class="btn btn-primary">Add to Cart</button>
-            <button class="btn btn-success">Buy Now</button>
-            <br><br>
+      <div class="button-group">
+        <button class="btn btn-primary">Add to Cart</button>
+        <button class="btn btn-success">Buy Now</button>
+        <br><br>
 
-            <p>Admin Controls</p>
-            <button class="btn btn-warning">Edit</button>
-            <button class="btn btn-danger">Delete</button>
-        </div>
+        <p>Admin Controls</p>
+        <a href="{{ route('medicines.edit', $medicine->id) }}" class="btn btn-warning">Edit</a>
+          <form action="{{ route('medicines.destroy', $medicine->id) }}" method="POST" style="display:inline;">
+          @csrf
+          @method('DELETE')
+          <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this medicine?');">Delete</button>
+      </form>
+      </div>
     </div>
 </div>
 
