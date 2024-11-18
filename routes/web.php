@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\EnsureTokenIsValid;
 use App\Http\Middleware\CheckAge;
@@ -58,7 +60,9 @@ Route::middleware([
     });
     Route::get('/user-contacts', [ContactController::class, 'myContacts'])->name('user-contacts');
     Route::post('/contacts', [ContactController::class, 'store'])->name('contacts.store');
-
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 });
 
 Route::middleware('isAdmin:admin')->group(function(){
