@@ -1,3 +1,7 @@
+@php
+use Illuminate\Support\Facades\Auth;
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -83,8 +87,8 @@
         <nav id="navmenu" class="navmenu">
           <ul>
             <li><a href="http://127.0.0.1:8000/">Home<br></a></li>
-            <li><a href="http://127.0.0.1:8000/about"   class="active">About</a></li>
-            <li><a href="http://127.0.0.1:8000/medicines">Medicines</a></li>
+            <li><a href="http://127.0.0.1:8000/about">About</a></li>
+            <li><a href="http://127.0.0.1:8000/medicines" class="active">Medicines</a></li>
             <li><a href="http://127.0.0.1:8000/doctors">Doctors</a></li>
             <li class="dropdown"><a href="http://127.0.0.1:8000/services"><span>Services</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
               <ul>
@@ -289,6 +293,11 @@ button[type="submit"]:hover {
   <main class="main">
         <section id="medicine-details" class="medicine-details section">
             <div class="container">
+            @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
                 <div class="row">
                     <div class="col-lg-8 col-md-6">
                         <div class="service-item">
@@ -296,7 +305,9 @@ button[type="submit"]:hover {
                     
                         </div>
                     </div>
+                    
                     <div class="col-lg-4 col-md-6">
+                    
                         <div class="service-item">
                           <h2 class="text-center mb-4">{{ $medicine->name }}</h2>
                           <h4 class="mt-3">Price: ₱{{ number_format($medicine->price, 2) }}</h4>
@@ -311,17 +322,20 @@ button[type="submit"]:hover {
                                     <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ $medicine->stock }}" class="form-control" required>
                                 </div>
                                 <button type="submit" class="btn btn-primary" id="add-to-cart-button">Add to Cart</button>
-                                <a href="#" class="btn btn-success mt-2">Buy Now</a>
+                                <a href="{{ route('cart.index') }}" class="btn btn-success mt-2">Go to Cart</a>
+                                <a href="http://127.0.0.1:8000/medicines" class="btn btn-success mt-2">Go Back</a>
+
                             </form>
                             <hr>
-                            <h5>Admin Controls</h5>
-                            <a href="{{ route('medicines.edit', $medicine->id) }}" class="btn btn-warning">Edit</a>
-                            <form action="{{ route('medicines.destroy', $medicine->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this medicine?');">Delete</button>
-                            </form>
-                        
+                            @if(Auth::check() && Auth::user()->role === 'admin') <!-- Check if user is logged in and is an admin -->
+                                <h5>Admin Controls</h5>
+                                <a href="{{ route('medicines.edit', $medicine->id) }}" class="btn btn-warning">Edit</a>
+                                <form action="{{ route('medicines.destroy', $medicine->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this medicine?');">Delete</button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>

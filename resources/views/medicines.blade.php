@@ -1,3 +1,7 @@
+@php
+use Illuminate\Support\Facades\Auth;
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -253,8 +257,13 @@ button[type="submit"]:hover {
             <p>
                 Enjoy the convenience and reliability of our Gamot Padala service. We ensure your medications are securely packaged and delivered promptly to your doorstep, providing peace of mind and enhancing your healthcare experience.
             </p>
-            <h2><a href="{{ route('medicines.create') }}" class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100" style="text-decoration: none;">Add new Medicine</a></h2>
-        </div>
+
+            <br/>
+
+            @if(Auth::check() && Auth::user()->role === 'admin') <!-- Check if user is logged in and is an admin -->
+            <h4><a href="{{ route('medicines.create') }}" class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100" style="text-decoration: none;">Add new Medicine</a></h2>
+            @endif
+          </div>
         <!-- End Section Title -->
 
         <div class="container">
