@@ -112,6 +112,10 @@
       </div>
 
     </div>
+
+    
+
+
  <style>
 /* Global Styles */
 
@@ -252,58 +256,78 @@ button[type="submit"]:hover {
     margin-bottom: 0;
 }
 
+.main {
+        padding: 20px;
+    }
+
+.medicine-image {
+        max-height: 480px; /* Set the maximum width */
+        width: auto; /* Maintain aspect ratio */
+        border-radius: 10px;
+        align: center;
+        display: block; /* Make it a block element */
+        margin: 0 auto; /* Center it horizontally */
+    }
+
+    .service-item {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        transition: box-shadow 0.3s;
+    }
+
+    .service-item:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+
+
+
     </style>   
   </header>
 
   <main class="main">
-    <section id="hero" class="services section">
-      
-        <div class="container section-title" data-aos="fade-up">
-            <h2>{{ $medicine->name }}</h2> <!-- Display the medicine name -->
-        </div>
-
-        <div class="container" style="width: 80%; margin: 0 auto; display: block;">
-            <div class="row gy-4">
-
-            <div class="col-lg-8 col-md-6">
-                    <div class="service-item position-relative">
-                        <img src="{{ asset('images/' . $medicine->image) }}" alt="{{ $medicine->name }}" width="100%">
-                        <br><br>
-                        <p>Price: ₱{{ number_format($medicine->price, 2) }}</p>
-                        <p><strong>Stock Quantity:</strong> {{ $medicine->stock }}</p>
-                        <p>Description: {{ $medicine->description }}</p>
+        <section id="medicine-details" class="medicine-details section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        <div class="service-item">
+                            <img src="{{ asset('images/' . $medicine->image) }}" alt="{{ $medicine->name }}" class="medicine-image">
+                    
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-item">
+                          <h2 class="text-center mb-4">{{ $medicine->name }}</h2>
+                          <h4 class="mt-3">Price: ₱{{ number_format($medicine->price, 2) }}</h4>
+                            <p><strong>Stock Quantity:</strong> <span id="stock-quantity">{{ $medicine->stock }}</span></p>
+                            <p><strong>Description:</strong> {{ $medicine->description }}</p>
+                            <br/>
+                            <h4>Actions</h4>
+                            <form action="{{ route('cart.add', $medicine->id) }}" method="POST" id="add-to-cart-form">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="quantity" class="form-label">Quantity:</label>
+                                    <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ $medicine->stock }}" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="add-to-cart-button">Add to Cart</button>
+                                <a href="#" class="btn btn-success mt-2">Buy Now</a>
+                            </form>
+                            <hr>
+                            <h5>Admin Controls</h5>
+                            <a href="{{ route('medicines.edit', $medicine->id) }}" class="btn btn-warning">Edit</a>
+                            <form action="{{ route('medicines.destroy', $medicine->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this medicine?');">Delete</button>
+                            </form>
+                        
+                        </div>
                     </div>
                 </div>
-
-                <div class="col-lg-4 col-md-6">
-    <div class="service-item position-relative">
-      <div class="button-group">
-            <form action="{{ route('cart.add', $medicine->id) }}" method="POST">
-              @csrf
-              <div>
-                  <label for="quantity">Quantity:</label>
-                  <input type="number" name="quantity" id="quantity" value="1" min="1" required>
-              </div>
-              <button type="submit">Add to Cart</button>
-          </form>
-        <button class="btn btn-success">Buy Now</button>
-        <br><br>
-
-        <p>Admin Controls</p>
-        <a href="{{ route('medicines.edit', $medicine->id) }}" class="btn btn-warning">Edit</a>
-          <form action="{{ route('medicines.destroy', $medicine->id) }}" method="POST" style="display:inline;">
-          @csrf
-          @method('DELETE')
-          <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this medicine?');">Delete</button>
-      </form>
-      </div>
-    </div>
-</div>
-
             </div>
-        </div>
-    </section>
-</main>
+        </section>
+    </main>
 
   <footer id="footer" class="footer light-background">
 
@@ -404,6 +428,24 @@ button[type="submit"]:hover {
 
   <!-- Main JS File -->
   <script src="/assets/js/main.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const stockQuantity = parseInt(document.getElementById('stock-quantity').innerText);
+        const quantityInput = document.getElementById('quantity');
+        const addToCartButton = document.getElementById('add-to-cart-button');
+
+        quantityInput.addEventListener('input', function() {
+            const quantity = parseInt(this.value);
+            if (quantity > stockQuantity) {
+                addToCartButton.disabled = true;
+                this.setCustomValidity(`You cannot add more than ${stockQuantity} items.`);
+            } else {
+                addToCartButton.disabled = false;
+                this.setCustomValidity('');
+            }
+        });
+    </script>
+
 
 </body>
 
