@@ -273,6 +273,9 @@ button[type="submit"]:hover {
     <label for="price">Price:</label>
     <input class="form-control" type="text" name="price" style="width: 600px; margin-bottom: 15px" value="{{ $medicine->price }}" required>
 
+    <label for="stock">Stock Quantity:</label>
+    <input class="form-control" type="number" name="stock" style="width: 600px; margin-bottom: 15px" value="{{ $medicine->stock }}" required>
+
     <label for="description">Description:</label>
     <textarea class="form-control" name="description" style="margin-bottom: 30px; height: 150px;" required> {{ $medicine->description }}</textarea>
 

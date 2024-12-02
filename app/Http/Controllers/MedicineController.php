@@ -27,6 +27,7 @@ class MedicineController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
+            'stock' => 'required|numeric',
             'description' => 'required|string', // Validate description
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
         ]);
@@ -45,6 +46,7 @@ class MedicineController extends Controller
         $medicine = new Medicine();
         $medicine->name = $request->name;
         $medicine->price = $request->price;
+        $medicine->stock = $request->stock;
         $medicine->description = $request->description; // Save the description
         $medicine->image = $imageName; // Save the image name to the database
         $medicine->save(); // Save the medicine
@@ -76,6 +78,7 @@ public function update(Request $request, $id)
     $request->validate([
         'name' => 'required|string|max:255',
         'price' => 'required|numeric',
+        'stock' => 'required|numeric',
         'description' => 'required|string',
         'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Image is optional during update
     ]);
@@ -102,6 +105,7 @@ public function update(Request $request, $id)
     // Update the medicine details
     $medicine->name = $request->name;
     $medicine->price = $request->price;
+    $medicine->stock = $request->stock;
     $medicine->description = $request->description;
     $medicine->save(); // Save the changes
 

@@ -2,57 +2,88 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Cart;
-use Illuminate\Support\Facades\Session;
+use App\Models\Medicine;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
     public function index()
-    {
-        $cart = Cart::getCart();
-        return view('cart', compact('cart'));
+{
+    // Get the authenticated user's ID
+    $userId = Auth::id();
+
+    // Fetch the cart items for the authenticated user
+    $cart = Cart::where('user_id', $userId)->with('medicine')->get();
+
+    // Calculate the total price of the cart
+    $total = 0;
+    foreach ($cart as $item) {
+        $total += $item->medicine->price * $item->quantity; // Assuming each Cart item has a relationship with Medicine
     }
 
-    public function addToCart(Request $request)
+    // Pass the cart items and total to the view
+    return view('cart', compact('cart', 'total'));
+}
+
+    public function addToCart(Request $request, $id)
     {
-        $productId = $request->input('product_id');
-        $product = Product::find($productId);
+        // Validate the request
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
 
-        if (!$product) {
-            return redirect()->route('products.index')->with('error', 'Product not found!');
-        }
+        // Find the medicine by ID
+        $medicine = Medicine::findOrFail($id);
 
-        $cart = session()->get('cart', []);
+        // Add the medicine to the cart
+        Cart::addToCart($medicine->id, $request->input('quantity'));
 
-        if (isset($cart[$productId])) {
-            $cart[$productId]['quantity']++; // Increment quantity if already in cart
-        } else {
-            $cart[$productId] = [
-                'name' => $product->name,
-                'price' => $product->price,
-                'quantity' => 1, // Initialize quantity
-            ];
-        }
+        // Optionally, you can add a success message to the session
+        session()->flash('success', 'Medicine added to cart successfully!');
 
-        session()->put('cart', $cart);
-        return redirect()->route('products.index')->with('success', 'Product added to cart successfully!');
+        // Redirect back to the medicine show page or wherever you want
+        return redirect()->route('medicine.show', $id);
     }
 
-    public function deleteProduct(Request $request)
+    public function update(Request $request)
     {
-        if ($request->product_id) {
-            $cart = session()->get('cart');
+        // Validate the request
+        $request->validate([
+            'itemId' => 'required|integer',
+            'quantity' => 'required|integer|min:1',
+        ]);
 
-            if (isset($cart[$request->product_id])) {
-                unset($cart[$request->product_id]); // Remove item from cart
-                session()->put('cart', $cart);
-            }
+        // Find the cart item by ID
+        $cartItem = Cart::where('id', $request->input('itemId'))->first();
+
+        // Check if the item exists and update the quantity
+        if ($cartItem) {
+            $cartItem->quantity = $request->input('quantity');
+            $cartItem->save(); // Save the updated item
+            return response()->json(['success' => true]);
         }
 
-        return redirect()->route('cart')->with('success', 'Product removed from cart successfully!');
+        return response()->json(['success' => false, 'message' => 'Item not found.'], 404);
     }
 
+    public function remove(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'itemId' => 'required|integer',
+        ]);
+
+        // Find the cart item by ID and delete it
+        $cartItem = Cart::where('id', $request->input('itemId'))->first();
+
+        if ($cartItem) {
+            $cartItem->delete(); // Remove the item from the cart
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Item not found.'], 404);
+    }
     
-
 }

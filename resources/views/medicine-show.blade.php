@@ -270,6 +270,7 @@ button[type="submit"]:hover {
                         <img src="{{ asset('images/' . $medicine->image) }}" alt="{{ $medicine->name }}" width="100%">
                         <br><br>
                         <p>Price: ₱{{ number_format($medicine->price, 2) }}</p>
+                        <p><strong>Stock Quantity:</strong> {{ $medicine->stock }}</p>
                         <p>Description: {{ $medicine->description }}</p>
                     </div>
                 </div>
@@ -277,7 +278,14 @@ button[type="submit"]:hover {
                 <div class="col-lg-4 col-md-6">
     <div class="service-item position-relative">
       <div class="button-group">
-        <button class="btn btn-primary">Add to Cart</button>
+            <form action="{{ route('cart.add', $medicine->id) }}" method="POST">
+              @csrf
+              <div>
+                  <label for="quantity">Quantity:</label>
+                  <input type="number" name="quantity" id="quantity" value="1" min="1" required>
+              </div>
+              <button type="submit">Add to Cart</button>
+          </form>
         <button class="btn btn-success">Buy Now</button>
         <br><br>
 

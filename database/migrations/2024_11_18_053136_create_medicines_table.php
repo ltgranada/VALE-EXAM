@@ -12,6 +12,7 @@ class CreateMedicinesTable extends Migration
             $table->string('name');
             $table->decimal('price', 8, 2);
             $table->text('description');
+            $table->integer('stock')->default(0); // Add stock column with a default value of 0
             $table->string('image')->nullable(); // Add this line for the image
             $table->timestamps();
         });

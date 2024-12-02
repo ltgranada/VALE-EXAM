@@ -31,16 +31,11 @@ Route::get('/services', function () {
     return view('services');
 });
 
-
 Route::get('/medicines', [MedicineController::class, 'index'])->name('medicines.index');
 Route::resource('medicines', MedicineController::class);
 Route::get('/create', [MedicineController::class, 'create'])->name('medicines.create');
 Route::post('/medicines', [MedicineController::class, 'store'])->name('medicines.store');
 Route::get('/medicines/{id}/show', [MedicineController::class, 'show'])->name('medicine.show');
-Route::get('/medicines/{id}/edit', [MedicineController::class, 'edit'])->name('medicines.edit');
-Route::put('/medicines/{id}', [MedicineController::class, 'update'])->name('medicines.update');
-Route::delete('/medicines/{id}', [MedicineController::class, 'destroy'])->name('medicines.destroy');
-
 
 Route::middleware([
     'auth:sanctum',
@@ -70,7 +65,9 @@ Route::middleware([
     Route::post('/contacts', [ContactController::class, 'store'])->name('contacts.store');
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 });
 
 Route::middleware('isAdmin:admin')->group(function(){
@@ -82,5 +79,9 @@ Route::middleware('isAdmin:admin')->group(function(){
     Route::put('/contacts/{id}', [ContactController::class, 'update'])->name('contacts.update');
     Route::delete('/contacts/{id}', [ContactController::class, 'destroy'])->name('contacts.destroy');
     Route::delete('/contacts/{id}/confirmed', [ContactController::class, 'destroyConfirmed'])->name('contacts.destroy.confirmed');
+
+    Route::get('/medicines/{id}/edit', [MedicineController::class, 'edit'])->name('medicines.edit');
+    Route::put('/medicines/{id}', [MedicineController::class, 'update'])->name('medicines.update');
+    Route::delete('/medicines/{id}', [MedicineController::class, 'destroy'])->name('medicines.destroy');
 });
 

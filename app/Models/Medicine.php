@@ -13,6 +13,7 @@ class Medicine extends Model
     protected $fillable = [
         'name',
         'price',
+        'stock',
         'description',
         'image', // Add image to the fillable properties
     ];
