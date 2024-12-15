@@ -18,7 +18,7 @@
         <!-- Styles -->
         @livewireStyles
         
-
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         
 
   <!-- Favicons -->
@@ -84,8 +84,8 @@
           <ul>
             <li><a href="http://127.0.0.1:8000/">Home<br></a></li>
             <li><a href="http://127.0.0.1:8000/about"   >About</a></li>
-            <li><a href="http://127.0.0.1:8000/medicines" >Medicines</a></li>
-            <li><a href="http://127.0.0.1:8000/doctors" class="active">Doctors</a></li>
+            <li><a href="http://127.0.0.1:8000/medicines" class="active">Medicines</a></li>
+            <li><a href="http://127.0.0.1:8000/doctors" >Doctors</a></li>
             <li class="dropdown"><a href="http://127.0.0.1:8000/services"><span>Services</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
               <ul>
               <li><a href="http://127.0.0.1:8000/padala">Gamot Padala</a></li>
@@ -122,46 +122,53 @@
 
 <!-- Doctors Section -->
 <section id="doctors" class="doctors section">
-<h1>Your Cart</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Total</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="cart-items">
-          @php $total = 0; @endphp
-          @foreach($cart as $item)
-            @php
-              $product = App\Models\Product::find($item->product_id);
-              $itemTotal = $product->price * $item->quantity;
-              $total += $itemTotal;
-            @endphp
-            <tr data-id="{{ $item->id }}">
-              <td>{{ $product->name }}</td>
-              <td>{{ $item->quantity }}</td>
-              <td>${{ number_format($product->price, 2) }}</td>
-              <td>${{ number_format($itemTotal, 2) }}</td>
-              <td><button class="btn btn-danger remove-from-cart">Remove</button></td>
-            </tr>
-          @endforeach
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3">Total</td>
-            <td>${{ number_format($total, 2) }}</td>
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
-      <a href="{{ route('products.index') }}">Continue Shopping</a>
-</section><!-- /Doctors Section -->
-
-
+<div class="container">
+                <h1 class="text-center mb-4">Your Cart</h1>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($cart as $item)
+                                <tr>
+                                    <td>{{ $item->medicine->name }}</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <button class="btn btn-secondary adjust-quantity" data-action="decrease" data-id="{{ $item->id }}">-</button>
+                                            <input type="number" class="form-control quantity" value="{{ $item->quantity }}" min="1" readonly>
+                                            <button class="btn btn-secondary adjust-quantity" data-action="increase" data-id="{{ $item->id }}">+</button>
+                                        </div>
+                                    </td>
+                                    <td>${{ number_format($item->medicine->price, 2) }}</td>
+                                    <td>${{ number_format($item->medicine->price * $item->quantity, 2) }}</td>
+                                    <td>
+                                        <button class="btn btn-danger remove-from-cart" data-id="{{ $item->id }}">Remove</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-right"><strong>Total</strong></td>
+                                <td id="grand-total">${{ number_format($total, 2) }}</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="/medicines" class="btn btn-primary">Continue Shopping</a>
+                    <a href="{{ route('checkout.index') }}" class="btn btn-primary">Check Out</a>
+                </div>
+            </div>
+</section>
 
   </main>
 
@@ -264,38 +271,113 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
-  <script>
-    $(document).ready(function() {
-      // Handle remove from cart
-      $('.remove-from-cart').click(function() {
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.adjust-quantity').click(function() {
         var row = $(this).closest('tr');
-        var itemId = row.data('id');
+        var quantityInput = row.find('.quantity');
+        var currentQuantity = parseInt(quantityInput.val());
+        var itemId = $(this).data('id');
 
+        if ($(this).data('action') === 'increase') {
+            currentQuantity++;
+        } else if ($(this).data('action') === 'decrease' && currentQuantity > 1) {
+            currentQuantity--;
+        }
+
+        // Update the displayed quantity
+        quantityInput.val(currentQuantity);
+
+        // Update the total for this item
+        var price = parseFloat(row.find('td:nth-child(3)').text().replace('$', ''));
+        var itemTotal = price * currentQuantity;
+        row.find('td:nth-child(4)').text('$' + itemTotal.toFixed(2));
+
+        // Update the grand total
+        updateTotal();
+
+        // Send AJAX request to update the quantity in the database
         $.ajax({
-          url: '/cart/remove/' + itemId, // Adjust the URL to your route
-          type: 'DELETE',
-          success: function(response) {
-            // Remove the row from the table
-            row.remove();
-            // Update the total
-            updateTotal();
-          },
-          error: function(xhr) {
-            alert('Error removing item from cart');
-          }
+            url: '{{ route("cart.update") }}', // Update this route as needed
+            type: 'POST',
+            data: {
+                itemId: itemId,
+                quantity: currentQuantity,
+                _token: '{{ csrf_token() }}' // Include CSRF token
+            },
+            success: function(response) {
+                if (response.success) {
+                    console.log('Quantity updated successfully.');
+                } else {
+                    console.log('Error updating quantity.');
+                }
+            },
+            error: function(xhr) {
+                console.log('Error: ' + xhr.responseText);
+            }
         });
-      });
+    });
 
-      function updateTotal() {
+    function updateTotal() {
         var total = 0;
-        $('#cart-items tr').each(function() {
-          var itemTotal = parseFloat($(this).find('td:nth-child(4)').text().replace('$', ''));
-          total += itemTotal;
+        $('tbody tr').each(function() {
+            var itemTotal = parseFloat($(this).find('td:nth-child(4)').text().replace('$', ''));
+            total += itemTotal;
         });
         $('#grand-total').text('$' + total.toFixed(2));
-      }
+    }
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    // Existing code for adjusting quantity...
+
+    // Remove item from cart
+    $('.remove-from-cart').click(function() {
+        var row = $(this).closest('tr'); // Get the row of the clicked button
+        var itemId = $(this).data('id'); // Get the item ID from the button's data attribute
+
+        // Confirm removal
+        if (confirm('Are you sure you want to remove this item from the cart?')) {
+            // Send AJAX request to remove the item
+            $.ajax({
+                url: '{{ route("cart.remove") }}', // Update this route as needed
+                type: 'POST',
+                data: {
+                    itemId: itemId,
+                    _token: '{{ csrf_token() }}' // Include CSRF token
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Remove the row from the table
+                        row.remove();
+                        // Update the grand total
+                        updateTotal();
+                        console.log('Item removed successfully.');
+                    } else {
+                        console.log('Error removing item.');
+                    }
+                },
+                error: function(xhr) {
+                    console.log('Error: ' + xhr.responseText);
+                }
+            });
+        }
     });
-  </script>
+
+    function updateTotal() {
+        var total = 0;
+        $('tbody tr').each(function() {
+            var itemTotal = parseFloat($(this).find('td:nth-child(4)').text().replace('$', ''));
+            total += itemTotal;
+        });
+        $('#grand-total').text('$' + total.toFixed(2));
+    }
+});
+</script>
 
 
 </body>

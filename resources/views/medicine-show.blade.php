@@ -1,3 +1,7 @@
+@php
+use Illuminate\Support\Facades\Auth;
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,8 +26,8 @@
         
 
   <!-- Favicons -->
-  <link href="assets/img/drug.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="/assets/img/drug.png" rel="icon">
+  <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -31,15 +35,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="/assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="/assets/css/main.css" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: Medilab
@@ -72,7 +76,7 @@
     <div class="branding d-flex align-items-center">
 
     <div class="container position-relative d-flex align-items-center justify-content-between">
-      <img src="assets/img/drug.png" alt="logo" width="60" height="75" >
+      <img src="/assets/img/drug.png" alt="logo" width="60" height="75" >
       <a href="index.html" class="logo align-items-center me-auto">
           <!-- Uncomment the line below if you also wish to use an image logo -->
           
@@ -83,8 +87,8 @@
         <nav id="navmenu" class="navmenu">
           <ul>
             <li><a href="http://127.0.0.1:8000/">Home<br></a></li>
-            <li><a href="http://127.0.0.1:8000/about"   class="active">About</a></li>
-            <li><a href="http://127.0.0.1:8000/medicines">Medicines</a></li>
+            <li><a href="http://127.0.0.1:8000/about">About</a></li>
+            <li><a href="http://127.0.0.1:8000/medicines" class="active">Medicines</a></li>
             <li><a href="http://127.0.0.1:8000/doctors">Doctors</a></li>
             <li class="dropdown"><a href="http://127.0.0.1:8000/services"><span>Services</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
               <ul>
@@ -112,15 +116,11 @@
       </div>
 
     </div>
+
     
 
-            
 
-  </header>
-
-  <main class="main">
-
-  <style>
+ <style>
 /* Global Styles */
 
 * {
@@ -196,64 +196,152 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background-color: #3e8e41;
 }
-    </style>
-    
-<section id="hero" class="hero section light-background">
 
-<div class="welcome position-relative" data-aos="fade-down" data-aos-delay="100">
-<!-- Appointment Section -->
+/*--------------------------------------------------------------
+# Services Section
+--------------------------------------------------------------*/
+.services .service-item:hover {
+  background: white;
+  border-color: white;
+}
 
-<!-- Section Title -->
-<div class="container section-title" data-aos="fade-up">
-<h2>Gamot Padala</h2>
-<p style="font-size: 13px;">Enjoy the convenience and reliability of our Gamot Padala service. We ensure your medications are securely packaged and delivered promptly to your doorstep, providing peace of mind and enhancing your healthcare experience.</p>
-        </br></br>
-        </div>
-<div class="container" data-aos="fade-up" data-aos-delay="100">
+.services .service-item:hover .icon {
+  background: var(--surface-color);
+}
 
-  <form action="forms/appointment.php" method="post" role="form" class="php-email-form">
-    <div class="row">
-      <div>
-        <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required="">
-      </div>
-      <div>
-        <input type="text" class="form-control" name="email" id="email" placeholder="Your Address" required="">
-      </div>
-      <div>
-        <input type="tel" class="form-control" name="phone" id="phone" placeholder="Your Phone" required="">
-      </div>
-    </div>
-    <div class="row">
-    <div>
-        <select name="department" id="department" class="form-select" required="">
-          <option value="">Choose Medicine</option>
-          <option value="Department 1">Biogesic</option>
-          <option value="Department 2">Bioflu</option>
-          <option value="Department 3">Neozep</option>
-        </select>
-      </div>
-      <div >
-        <input type="number" name="number" class="form-control datepicker" id="date" placeholder="Quantity" required="">
-      </div>
-    
-    </div>
+.services .service-item:hover .icon i {
+  color: var(--accent-color);
+}
 
-    <div class="form-group mt-3">
-      <textarea class="form-control" name="message" rows="5" placeholder="Message (Optional)"></textarea>
-    </div>
-    <div class="mt-3">
-      <div class="loading">Loading</div>
-      <div class="error-message"></div>
-      <div class="sent-message">Your order is being processed. Thank you!</div>
-      <div class="text-center"><button type="submit">Place Order</button></div>
-    </div>
-  </form>
+.services .service-item:hover .icon::before {
+  background: color-mix(in srgb, var(--background-color), transparent 70%);
+}
 
-</div>
-      
-        </section><!-- /Hero Section -->
+.services .service-item:hover h3,
+.services .service-item:hover p {
+  color: black;
+}
 
-  </main>
+.services .service-item {
+    background-color: var(--surface-color);
+    box-shadow: 0px 5px 90px 0px rgba(0, 0, 0, 0.1);
+    padding: 60px 30px;
+    transition: all ease-in-out 0.3s;
+    border-radius: 18px;
+    border-bottom: 5px solid var(--surface-color);
+    height: 100%;
+}
+
+.services .service-item .icon {
+    color: var(--contrast-color);
+    background: var(--accent-color);
+    margin: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+    transition: ease-in-out 0.3s;
+}
+
+.services .service-item h3 {
+    font-weight: 700;
+    margin: 10px 0 15px 0;
+    font-size: 22px;
+    transition: ease-in-out 0.3s;
+}
+
+.services .service-item p {
+    line-height: 24px;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+.main {
+        padding: 20px;
+    }
+
+.medicine-image {
+        max-height: 480px; /* Set the maximum width */
+        width: auto; /* Maintain aspect ratio */
+        border-radius: 10px;
+        align: center;
+        display: block; /* Make it a block element */
+        margin: 0 auto; /* Center it horizontally */
+    }
+
+    .service-item {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        transition: box-shadow 0.3s;
+    }
+
+    .service-item:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+
+
+
+    </style>   
+  </header>
+
+  <main class="main">
+        <section id="medicine-details" class="medicine-details section">
+            <div class="container">
+            @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        <div class="service-item">
+                            <img src="{{ asset('images/' . $medicine->image) }}" alt="{{ $medicine->name }}" class="medicine-image">
+                    
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                    
+                        <div class="service-item">
+                          <h2 class="text-center mb-4">{{ $medicine->name }}</h2>
+                          <h4 class="mt-3">Price: ₱{{ number_format($medicine->price, 2) }}</h4>
+                            <p><strong>Stock Quantity:</strong> <span id="stock-quantity">{{ $medicine->stock }}</span></p>
+                            <p><strong>Description:</strong> {{ $medicine->description }}</p>
+                            <br/>
+                            <h4>Actions</h4>
+                            <form action="{{ route('cart.add', $medicine->id) }}" method="POST" id="add-to-cart-form">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="quantity" class="form-label">Quantity:</label>
+                                    <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ $medicine->stock }}" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="add-to-cart-button">Add to Cart</button>
+                                <a href="{{ route('cart.index') }}" class="btn btn-success mt-2">Go to Cart</a>
+                                <a href="http://127.0.0.1:8000/medicines" class="btn btn-success mt-2">Go Back</a>
+
+                            </form>
+                            <hr>
+                            @if(Auth::check() && Auth::user()->role === 'admin') <!-- Check if user is logged in and is an admin -->
+                                <h5>Admin Controls</h5>
+                                <a href="{{ route('medicines.edit', $medicine->id) }}" class="btn btn-warning">Edit</a>
+                                <form action="{{ route('medicines.destroy', $medicine->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this medicine?');">Delete</button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
   <footer id="footer" class="footer light-background">
 
@@ -345,15 +433,33 @@ button[type="submit"]:hover {
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/vendor/php-email-form/validate.js"></script>
+  <script src="/assets/vendor/aos/aos.js"></script>
+  <script src="/assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
 
   <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
+  <script src="/assets/js/main.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const stockQuantity = parseInt(document.getElementById('stock-quantity').innerText);
+        const quantityInput = document.getElementById('quantity');
+        const addToCartButton = document.getElementById('add-to-cart-button');
+
+        quantityInput.addEventListener('input', function() {
+            const quantity = parseInt(this.value);
+            if (quantity > stockQuantity) {
+                addToCartButton.disabled = true;
+                this.setCustomValidity(`You cannot add more than ${stockQuantity} items.`);
+            } else {
+                addToCartButton.disabled = false;
+                this.setCustomValidity('');
+            }
+        });
+    </script>
+
 
 </body>
 

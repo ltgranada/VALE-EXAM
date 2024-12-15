@@ -1,3 +1,7 @@
+@php
+use Illuminate\Support\Facades\Auth;
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -83,12 +87,12 @@
         <nav id="navmenu" class="navmenu">
           <ul>
             <li><a href="http://127.0.0.1:8000/">Home<br></a></li>
-            <li><a href="http://127.0.0.1:8000/about"   >About</a></li>
-            <li><a href="http://127.0.0.1:8000/medicines" class="active">Medicines</a></li>
+            <li><a href="http://127.0.0.1:8000/about"   class="active">About</a></li>
+            <li><a href="http://127.0.0.1:8000/medicines">Medicines</a></li>
             <li><a href="http://127.0.0.1:8000/doctors">Doctors</a></li>
             <li class="dropdown"><a href="http://127.0.0.1:8000/services"><span>Services</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
               <ul>
-              <li><a href="http://127.0.0.1:8000/padala">Gamot Padala</a></li>
+                <li><a href="http://127.0.0.1:8000/padala">Gamot Padala</a></li>
                 <li><a href="http://127.0.0.1:8000/appointment">Book a Consultation</a></li>
                 <li><a href="http://127.0.0.1:8000/inquiry">Medicine Inquiry</a></li>
               </ul>
@@ -112,99 +116,178 @@
       </div>
 
     </div>
-    
+ <style>
+/* Global Styles */
 
-            
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* Logo Styles */
+
+.logo {
+  display: block;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.logo img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Form Styles */
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #aaa;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.checkbox {
+  margin-right: 10px;
+}
+
+.checkbox label {
+  font-weight: normal;
+}
+
+/* Button Styles */
+
+button[type="submit"] {
+  background-color: #2074cc;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  weight: bold;
+}
+
+button[type="submit"]:hover {
+  background-color: #3e8e41;
+}
+
+/*--------------------------------------------------------------
+# Services Section
+--------------------------------------------------------------*/
+.services .service-item {
+    background-color: var(--surface-color);
+    box-shadow: 0px 5px 90px 0px rgba(0, 0, 0, 0.1);
+    padding: 60px 30px;
+    transition: all ease-in-out 0.3s;
+    border-radius: 18px;
+    border-bottom: 5px solid var(--surface-color);
+    height: 100%;
+}
+
+.services .service-item .icon {
+    color: var(--contrast-color);
+    background: var(--accent-color);
+    margin: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+    transition: ease-in-out 0.3s;
+}
+
+.services .service-item h3 {
+    font-weight: 700;
+    margin: 10px 0 15px 0;
+    font-size: 22px;
+    transition: ease-in-out 0.3s;
+}
+
+.services .service-item p {
+    line-height: 24px;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+@media (min-width: 1365px) {
+    .services .service-item:hover {
+        transform: translateY(-10px);
+        border-color: var(--accent-color);
+    }
+
+    .services .service-item:hover h3 {
+        color: var(--accent-color);
+    }
+}
+
+    </style>   
   </header>
 
   <main class="main">
+    <!-- Gamot Padala Section -->
+    <section id="hero" class="services section">
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+            <h2>Gamot Padala</h2>
+            <p>
+                Enjoy the convenience and reliability of our Gamot Padala service. We ensure your medications are securely packaged and delivered promptly to your doorstep, providing peace of mind and enhancing your healthcare experience.
+            </p>
 
-<!-- Gallery Section -->
-<section id="gallery" class="gallery section">
+            <br/>
 
-<!-- Section Title -->
-<div class="container section-title" data-aos="fade-up">
-  <h2>Medicines</h2>
-  <p>Providing a wide range of high-quality medications to meet your healthcare needs, ensuring safety, efficacy, and convenience for every patient.</p>
-</div><!-- End Section Title -->
+            @if(Auth::check() && Auth::user()->role === 'admin') <!-- Check if user is logged in and is an admin -->
+            <h4><a href="{{ route('medicines.create') }}" class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100" style="text-decoration: none;">Add new Medicine</a></h2>
+            @endif
+          </div>
+        <!-- End Section Title -->
 
-<div class="container-fluid" data-aos="fade-up" data-aos-delay="100">
-
-  <div class="row g-0">
-
-    <div class="col-lg-3 col-md-4">
-      <div class="gallery-item">
-        <a href="assets/img/gallery/gallery-1.jpg" class="glightbox" data-gallery="images-gallery">
-          <img src="assets/img/gallery/gallery-1.jpg" alt="" class="img-fluid">
-        </a>
-      </div>
-    </div><!-- End Gallery Item -->
-
-    <div class="col-lg-3 col-md-4">
-      <div class="gallery-item">
-        <a href="assets/img/gallery/gallery-2.jpg" class="glightbox" data-gallery="images-gallery">
-          <img src="assets/img/gallery/gallery-2.jpg" alt="" class="img-fluid">
-        </a>
-      </div>
-    </div><!-- End Gallery Item -->
-
-    <div class="col-lg-3 col-md-4">
-      <div class="gallery-item">
-        <a href="assets/img/gallery/gallery-3.jpg" class="glightbox" data-gallery="images-gallery">
-          <img src="assets/img/gallery/gallery-3.jpg" alt="" class="img-fluid">
-        </a>
-      </div>
-    </div><!-- End Gallery Item -->
-
-    <div class="col-lg-3 col-md-4">
-      <div class="gallery-item">
-        <a href="assets/img/gallery/gallery-4.jpg" class="glightbox" data-gallery="images-gallery">
-          <img src="assets/img/gallery/gallery-4.jpg" alt="" class="img-fluid">
-        </a>
-      </div>
-    </div><!-- End Gallery Item -->
-
-    <div class="col-lg-3 col-md-4">
-      <div class="gallery-item">
-        <a href="assets/img/gallery/gallery-5.jpg" class="glightbox" data-gallery="images-gallery">
-          <img src="assets/img/gallery/gallery-5.jpg" alt="" class="img-fluid">
-        </a>
-      </div>
-    </div><!-- End Gallery Item -->
-
-    <div class="col-lg-3 col-md-4">
-      <div class="gallery-item">
-        <a href="assets/img/gallery/gallery-6.jpg" class="glightbox" data-gallery="images-gallery">
-          <img src="assets/img/gallery/gallery-6.jpg" alt="" class="img-fluid">
-        </a>
-      </div>
-    </div><!-- End Gallery Item -->
-
-    <div class="col-lg-3 col-md-4">
-      <div class="gallery-item">
-        <a href="assets/img/gallery/gallery-7.jpg" class="glightbox" data-gallery="images-gallery">
-          <img src="assets/img/gallery/gallery-7.jpg" alt="" class="img-fluid">
-        </a>
-      </div>
-    </div><!-- End Gallery Item -->
-
-    <div class="col-lg-3 col-md-4">
-      <div class="gallery-item">
-        <a href="assets/img/gallery/gallery-8.jpg" class="glightbox" data-gallery="images-gallery">
-          <img src="assets/img/gallery/gallery-8.jpg" alt="" class="img-fluid">
-        </a>
-      </div>
-    </div><!-- End Gallery Item -->
-
-  </div>
-
+        <div class="container">
+    <div class="row gy-4">
+        @foreach ($medicines as $medicine)
+            <a href="{{ route('medicines.show', $medicine->id) }}" class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100" style="text-decoration: none;">
+                <div class="service-item position-relative">
+                    <div class="info">
+                        @if($medicine->image)
+                            <img src="{{ asset('images/' . $medicine->image) }}" alt="{{ $medicine->name }}" width="100%">
+                        @else
+                            <p>No image available.</p>
+                        @endif
+                        <p>Name: {{ $medicine->name }}</p>
+                        <p>Price: ₱{{ number_format($medicine->price, 2) }}</p>
+                    </div>
+                </div>
+            </a>
+        @endforeach
+    </div>
 </div>
-
-</section><!-- /Gallery Section -->
-
-
-  </main>
+    </section>
+    <!-- /Services Section -->
+</main>
 
   <footer id="footer" class="footer light-background">
 
@@ -309,5 +392,3 @@
 </body>
 
 </html>
-
-
