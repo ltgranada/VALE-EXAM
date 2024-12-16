@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
 class ForumController extends Controller
@@ -56,15 +57,22 @@ class ForumController extends Controller
         return redirect()->route('forum.index')->with('success', 'Post created successfully.');
     }
 
-    public function edit(Post $post)
+    public function edit($id)
     {
-        $this->authorize('update', $post);
+        // Retrieve the post by ID
+        $post = Post::find($id);
+
+        // Check if the post exists
+        if (!$post) {
+            abort(404, 'Post not found');
+        }
+
+        // Return the edit view with the post data
         return view('forum-edit', compact('post'));
     }
 
     public function update(Request $request, Post $post)
     {
-        $this->authorize('update', $post);
 
         $request->validate([
             'title' => 'required|string|max:255',
@@ -74,7 +82,8 @@ class ForumController extends Controller
 
         $post->title = $request->title;
         $post->body = $request->body;
-
+        
+        
         if ($request->hasFile('image')) {
             // Delete the old image if it exists
             if ($post->image) {
@@ -151,5 +160,17 @@ class ForumController extends Controller
         }
 
         return response()->json(['success' => false, 'message' => 'Comment not found.'], 404);
+    }
+
+    public function commentUpdate(Request $request, Comment $comment)
+    {
+        $request->validate([
+            'body' => 'required|string',
+        ]);
+
+        $comment->body = $request->body;
+        $comment->save();
+
+        return response()->json(['message' => 'Comment updated successfully.', 'comment' => $comment]);
     }
 }

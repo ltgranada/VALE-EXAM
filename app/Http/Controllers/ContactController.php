@@ -76,59 +76,59 @@ class ContactController extends Controller
     }
 
     public function edit($id)
-{
-    $contact = collect($this->contacts)->firstWhere('id', $id);
+    {
+        $contact = collect($this->contacts)->firstWhere('id', $id);
 
-    if (!$contact) {
-        abort(404, 'Contact not found');
-    }
-
-    return view('contact-edit', ['contact' => $contact]);
-}
-
-public function update(Request $request, $id)
-{
-    $contact = collect($this->contacts)->firstWhere('id', $id);
-
-    if (!$contact) {
-        abort(404, 'Contact not found');
-    }
-
-    $validatedData = $request->validate([
-        'name' => 'required|string',
-        'email' => 'required|email',
-        'subject' => 'required|string',
-        'message' => 'required|string',
-'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-    ]);
-
-    $contact->name = $validatedData['name'];
-    $contact->email = $validatedData['email'];
-    $contact->subject = $validatedData['subject'];
-    $contact->message = $validatedData['message'];
-
-      // Check if a new image has been uploaded
-    if ($request->hasFile('image')) {
-        // Delete the old image if it exists
-        if ($contact->image) {
-            Storage::disk('public')->delete($contact->image); // Delete the old image
+        if (!$contact) {
+            abort(404, 'Contact not found');
         }
 
-        // Store the new image
-        
+        return view('contact-edit', ['contact' => $contact]);
     }
 
-    if ($request->hasFile('image')) {
-        $image = $request->file('image');
-        $imageName = time() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('images'), $imageName);
-        $contact->image = $imageName;
+    public function update(Request $request, $id)
+    {
+        $contact = collect($this->contacts)->firstWhere('id', $id);
+
+        if (!$contact) {
+            abort(404, 'Contact not found');
+        }
+
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'subject' => 'required|string',
+            'message' => 'required|string',
+    'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        $contact->name = $validatedData['name'];
+        $contact->email = $validatedData['email'];
+        $contact->subject = $validatedData['subject'];
+        $contact->message = $validatedData['message'];
+
+        // Check if a new image has been uploaded
+        if ($request->hasFile('image')) {
+            // Delete the old image if it exists
+            if ($contact->image) {
+                Storage::disk('public')->delete($contact->image); // Delete the old image
+            }
+
+            // Store the new image
+            
+        }
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images'), $imageName);
+            $contact->image = $imageName;
+        }
+
+        $contact->save();
+
+        return redirect()->route('contacts.index')->with('success', 'Contact updated successfully!');
     }
-
-    $contact->save();
-
-    return redirect()->route('contacts.index')->with('success', 'Contact updated successfully!');
-}
 
     public function destroy($id)
     {
