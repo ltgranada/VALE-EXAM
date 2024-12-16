@@ -10,6 +10,8 @@ use App\Http\Controllers\MedicineController;
 use App\Http\Middleware\EnsureTokenIsValid;
 use App\Http\Middleware\CheckAge;
 use App\Http\Middleware\Admin;
+use App\Http\Controllers\ForumController;
+
 
 Route::get('/', function () {
     return view('home');
@@ -78,7 +80,7 @@ Route::middleware([
 
 Route::middleware('isAdmin:admin')->group(function(){
     Route::get('/contact-list', [ContactController::class, 'index'])->name('contacts.index');
-    Route::get('/contact/create', [ContactController::class, 'create'])->name('contact');
+    Route::get('/contact', [ContactController::class, 'create'])->name('contact');
     Route::get('/contact/edit', [ContactController::class, 'edit'])->name('contacts.edit');
     Route::get('/contacts/{id}', [ContactController::class, 'show'])->name('contacts.show');
     Route::get('/contacts/{id}/edit', [ContactController::class, 'edit'])->name('contacts.edit');
@@ -89,5 +91,19 @@ Route::middleware('isAdmin:admin')->group(function(){
     Route::get('/medicines/{id}/edit', [MedicineController::class, 'edit'])->name('medicines.edit');
     Route::put('/medicines/{id}', [MedicineController::class, 'update'])->name('medicines.update');
     Route::delete('/medicines/{id}', [MedicineController::class, 'destroy'])->name('medicines.destroy');
+
+    Route::get('/forum/admin', [ForumController::class, 'adminIndex'])->name('forum.adminIndex');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
+    Route::get('/forum/create', [ForumController::class, 'create'])->name('forum.create');
+    Route::post('/forum', [ForumController::class, 'store'])->name('forum.store');
+    Route::get('/forum/{post}/edit', [ForumController::class, 'edit'])->name('forum.edit');
+    Route::put('/forum/{post}', [ForumController::class, 'update'])->name('forum.update');
+    Route::delete('/forum/{id}', [ForumController::class, 'destroy'])->name('forum.destroy');
+    Route::post('/posts/{post}/comments', [ForumController::class, 'commentStore'])->name('forum.comment.store');
+    Route::delete('/comments/{id}', [ForumController::class, 'commentDestroy'])->name('forum.comment.destroy');
+    Route::get('/forum/{post}', [ForumController::class, 'show'])->name('forum.show');
 });
 

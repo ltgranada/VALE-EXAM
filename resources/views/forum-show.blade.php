@@ -85,7 +85,7 @@
             <li><a href="http://127.0.0.1:8000/">Home<br></a></li>
             <li><a href="http://127.0.0.1:8000/about"   >About</a></li>
             <li><a href="http://127.0.0.1:8000/medicines" >Medicines</a></li>
-            <li><a href="http://127.0.0.1:8000/doctors">Doctors</a></li>
+            <li><a href="http://127.0.0.1:8000/doctors" class="active">Doctors</a></li>
             <li class="dropdown"><a href="http://127.0.0.1:8000/services"><span>Services</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
               <ul>
               <li><a href="http://127.0.0.1:8000/padala">Gamot Padala</a></li>
@@ -93,7 +93,7 @@
                 <li><a href="http://127.0.0.1:8000/inquiry">Medicine Inquiry</a></li>
               </ul>
             </li>
-            <li><a href="http://127.0.0.1:8000/contact" class="active">Contact</a></li>
+            <li><a href="http://127.0.0.1:8000/contact">Contact</a></li>
           </ul>
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
@@ -112,45 +112,77 @@
       </div>
 
     </div>
-    
-
-            
-
   </header>
-
   <main class="main">
 
 <!-- Doctors Section -->
 <section id="doctors" class="doctors section">
 
-<!-- Section Title -->
-<div class="container section-title pb-0" data-aos="fade-up">
-  <h2>Contact: {{ $contact['id'] }}</h2>
-</div><!-- End Section Title -->
-
 <div class="container">
-    <div class="" data-aos="fade-up" data-aos-delay="100">
-      <div class="mt-4 team-member d-flex align-items-start">
-        <div class="member-info">
-        <h4>Contact: {{ $contact['name'] }}</h4>
-          <span>Author: {{ $contact['email'] }}</span>
-          <span>Category: {{ $contact['subject'] }}</span>
-          <span>Content: <br />{{ $contact['message'] }}</span>
-          <br />
-          @if($contact->image)
-            <div style="text-align: center;">
-              <img src="{{ asset('images/' . $contact->image) }}" alt="Contact Image" style="width: 500px; height: auto;">
-            </div>
-          @endif
+    <div class="row justify-content-center">
+    <div class="container mt-3 mb-3">
+            <a href="{{ route('forum.index') }}" class="btn btn-secondary">Back to Forums</a>
         </div>
-      </div>
-    </div><!-- End Team Member -->
+        <div class="col-md-8">
+                    <div class="card">
+                <div class="card-header d-flex justify-content-between"> 
+                  <h2>{{ $post->title }}</h2> 
+                  @if (auth()->user()->id === $post->user_id || auth()->user()->role === 'admin')
+                    <form action="{{ route('forum.destroy', $post->id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-link text-danger">
+                                <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </form>
+                @endif</div>
+                <div class="card-body">
+                    <p>{{ $post->body }}</p>
+                    @if($post->image)
+                        <img src="{{ asset('storage/' . $post->image) }}" alt="Post Image" class="img-fluid mb-2">
+                    @endif
+                    <p class="text-muted">Posted by: {{ $post->user->name }}</p>
 
-  </div>
+                    <h5>Comments:</h5>
+                    <div id="comment-section">
+                        @foreach($post->comments as $comment)
+                            <div class="comment mb-3" id="comment-{{ $comment->id }}">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div class="d-flex align-items-start">
+                                        <img src="https://via.placeholder.com/40" alt="User  Avatar" class="rounded-circle me-2">
+                                        <div class="comment-body">
+                                            <h6 class="fw-bold">{{ $comment->user->name }}</h6>
+                                            <p>{{ $comment->body }}</p>
+                                        </div>
+                                    </div>
+                                    @if (auth()->user()->id === $comment->user_id || auth()->user()->role === 'admin')
+                                        <button class="btn btn-link text-danger p-0 delete-comment" data-id="{{ $comment->id }}" title="Delete Comment">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
 
+                    <div id="alert-message" style="display: none;" class="alert alert-success"></div>
+
+                    <form id="comment-form">
+                        @csrf
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="body" placeholder="Add a comment" required>
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 </section><!-- /Doctors Section -->
+
+
 
   </main>
 
@@ -253,9 +285,81 @@
 
   <!-- Main JS File -->
   <script src="/assets/js/main.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+<script>
+    // AJAX for adding a comment
+    $('#comment-form').on('submit', function(e) {
+        e.preventDefault(); // Prevent the form from submitting normally
+
+        $.ajax({
+            url: '{{ route('forum.comment.store', $post->id) }}', // Adjust the URL to match your route
+            type: 'POST',
+            data: $(this).serialize(), // Serialize the form data
+            success: function(response) {
+                // Append the new comment to the comment section
+                $('#comment-section').append(`
+                    <div class="comment mb-3" id="comment-${response.comment.id}">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="d-flex align-items-start">
+                                <img src="https://via.placeholder.com/40" alt="User  Avatar" class="rounded-circle me-2">
+                                <div class="comment-body">
+                                    <h6 class="fw-bold">${response.comment.user.name}</h6>
+                                    <p>${response.comment.body}</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-link text-danger p-0 delete-comment" data-id="${response.comment.id}" title="Delete Comment">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `);
+                // Clear the input field
+                $('input[name="body"]').val('');
+                // Show success message
+                $('#alert-message').text('Comment added successfully.').show().delay(3000).fadeOut();
+            },
+            error: function(xhr) {
+                // Handle error response
+                alert(xhr.responseJSON.message);
+            }
+        });
+    });
+
+    // AJAX for deleting a comment
+    $(document).on('click', '.delete-comment', function() {
+        var commentId = $(this).data('id');
+        var confirmation = confirm("Are you sure you want to delete this comment?");
+        
+        if (confirmation) {
+          $.ajax({
+              url: '/comments/' + commentId, // Ensure this matches your route
+              type: 'DELETE',
+              data: {
+                  _token: '{{ csrf_token() }}' // Include CSRF token for security
+              },
+              success: function(response) {
+                  // Remove the comment from the DOM
+                  $('#comment-' + commentId).remove();
+                  // Show success message
+                  $('#alert-message').text(response.message).show().delay(3000).fadeOut();
+              },
+              error: function(xhr) {
+                  // Handle error response
+                  alert(xhr.responseJSON.message);
+              }
+          });
+        }
+    });
+</script>
 
 </body>
 
 </html>
 
-    
+
+
+
+
+
+

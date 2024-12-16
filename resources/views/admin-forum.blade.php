@@ -17,9 +17,7 @@
 
         <!-- Styles -->
         @livewireStyles
-        
 
-        
 
   <!-- Favicons -->
   <link href="/assets/img/drug.png" rel="icon">
@@ -85,7 +83,7 @@
             <li><a href="http://127.0.0.1:8000/">Home<br></a></li>
             <li><a href="http://127.0.0.1:8000/about"   >About</a></li>
             <li><a href="http://127.0.0.1:8000/medicines" >Medicines</a></li>
-            <li><a href="http://127.0.0.1:8000/doctors">Doctors</a></li>
+            <li><a href="http://127.0.0.1:8000/doctors" class="active">Doctors</a></li>
             <li class="dropdown"><a href="http://127.0.0.1:8000/services"><span>Services</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
               <ul>
               <li><a href="http://127.0.0.1:8000/padala">Gamot Padala</a></li>
@@ -93,7 +91,7 @@
                 <li><a href="http://127.0.0.1:8000/inquiry">Medicine Inquiry</a></li>
               </ul>
             </li>
-            <li><a href="http://127.0.0.1:8000/contact" class="active">Contact</a></li>
+            <li><a href="http://127.0.0.1:8000/contact">Contact</a></li>
           </ul>
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
@@ -112,45 +110,76 @@
       </div>
 
     </div>
-    
-
-            
-
   </header>
-
   <main class="main">
 
 <!-- Doctors Section -->
 <section id="doctors" class="doctors section">
 
-<!-- Section Title -->
-<div class="container section-title pb-0" data-aos="fade-up">
-  <h2>Contact: {{ $contact['id'] }}</h2>
-</div><!-- End Section Title -->
-
 <div class="container">
-    <div class="" data-aos="fade-up" data-aos-delay="100">
-      <div class="mt-4 team-member d-flex align-items-start">
-        <div class="member-info">
-        <h4>Contact: {{ $contact['name'] }}</h4>
-          <span>Author: {{ $contact['email'] }}</span>
-          <span>Category: {{ $contact['subject'] }}</span>
-          <span>Content: <br />{{ $contact['message'] }}</span>
-          <br />
-          @if($contact->image)
-            <div style="text-align: center;">
-              <img src="{{ asset('images/' . $contact->image) }}" alt="Contact Image" style="width: 500px; height: auto;">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Forum</span>
+                    @if(auth()->user()->role == 'admin')
+    <a href="{{ route('forum.adminIndex') }}" class="btn btn-primary">Manage Posts</a>
+@endif
+                    <a href="{{ route('forum.create') }}" class="btn btn-success">Create Post</a>
+                </div>
+                @if (session('success'))
+                <br />
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if (session('error'))
+<br />
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+    <br />
+@endif
+
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Posted By</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($posts as $post)
+                                <tr>
+                                    <td>
+                                        <a href="{{ route('forum.show', $post) }}">{{ $post->title }}</a>
+                                    </td>
+                                    <td>{{ $post->user->name }}</td>
+                                    <td>
+                                    <form action="{{ route('forum.destroy', $post->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete Post">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
-          @endif
         </div>
-      </div>
-    </div><!-- End Team Member -->
-
-  </div>
-
+    </div>
 </div>
 
 </section><!-- /Doctors Section -->
+
+
 
   </main>
 
@@ -257,5 +286,3 @@
 </body>
 
 </html>
-
-    

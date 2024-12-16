@@ -72,7 +72,7 @@
     <div class="branding d-flex align-items-center">
 
     <div class="container position-relative d-flex align-items-center justify-content-between">
-      <img src="/assets/img/drug.png" alt="logo" width="60" height="75" >
+      <img src="assets/img/drug.png" alt="logo" width="60" height="75" >
       <a href="index.html" class="logo align-items-center me-auto">
           <!-- Uncomment the line below if you also wish to use an image logo -->
           
@@ -85,7 +85,7 @@
             <li><a href="http://127.0.0.1:8000/">Home<br></a></li>
             <li><a href="http://127.0.0.1:8000/about"   >About</a></li>
             <li><a href="http://127.0.0.1:8000/medicines" >Medicines</a></li>
-            <li><a href="http://127.0.0.1:8000/doctors">Doctors</a></li>
+            <li><a href="http://127.0.0.1:8000/doctors" class="active">Doctors</a></li>
             <li class="dropdown"><a href="http://127.0.0.1:8000/services"><span>Services</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
               <ul>
               <li><a href="http://127.0.0.1:8000/padala">Gamot Padala</a></li>
@@ -93,7 +93,7 @@
                 <li><a href="http://127.0.0.1:8000/inquiry">Medicine Inquiry</a></li>
               </ul>
             </li>
-            <li><a href="http://127.0.0.1:8000/contact" class="active">Contact</a></li>
+            <li><a href="http://127.0.0.1:8000/contact">Contact</a></li>
           </ul>
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
@@ -112,45 +112,45 @@
       </div>
 
     </div>
-    
-
-            
-
   </header>
-
   <main class="main">
 
 <!-- Doctors Section -->
 <section id="doctors" class="doctors section">
 
-<!-- Section Title -->
-<div class="container section-title pb-0" data-aos="fade-up">
-  <h2>Contact: {{ $contact['id'] }}</h2>
-</div><!-- End Section Title -->
-
-<div class="container">
-    <div class="" data-aos="fade-up" data-aos-delay="100">
-      <div class="mt-4 team-member d-flex align-items-start">
-        <div class="member-info">
-        <h4>Contact: {{ $contact['name'] }}</h4>
-          <span>Author: {{ $contact['email'] }}</span>
-          <span>Category: {{ $contact['subject'] }}</span>
-          <span>Content: <br />{{ $contact['message'] }}</span>
-          <br />
-          @if($contact->image)
-            <div style="text-align: center;">
-              <img src="{{ asset('images/' . $contact->image) }}" alt="Contact Image" style="width: 500px; height: auto;">
+<div class="container mt-2">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>Create Post</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('forum.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label for="title">Title:</label>
+                            <input type="text" class="form-control" name="title" id="title" required>
+                        </div><br />
+                        <div class="form-group">
+                            <label for="body">Body:</label>
+                            <textarea class="form-control" name="body" id="body" rows="5" required></textarea>
+                        </div><br />
+                        <div class="form-group">
+                            <label for="image">Image:</label>
+                            <input type="file" class="form-control-file" name="image" id="image">
+                        </div><br />
+                        <button type="submit" class="btn btn-primary btn-block">Create Post</button>
+                    </form>
+                </div>
             </div>
-          @endif
         </div>
-      </div>
-    </div><!-- End Team Member -->
-
-  </div>
-
+    </div>
 </div>
 
 </section><!-- /Doctors Section -->
+
+
 
   </main>
 
@@ -258,4 +258,7 @@
 
 </html>
 
-    
+
+
+
+

@@ -21,6 +21,11 @@ class ContactController extends Controller
         return view('contact-list', compact('contacts'));
     }
 
+    public function create()
+    {
+        return view('contact');
+    }
+
     public function store(Request $request)
 {
     $validatedData = $request->validate([
