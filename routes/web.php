@@ -105,5 +105,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/posts/{post}/comments', [ForumController::class, 'commentStore'])->name('forum.comment.store');
     Route::delete('/comments/{id}', [ForumController::class, 'commentDestroy'])->name('forum.comment.destroy');
     Route::get('/forum/{post}', [ForumController::class, 'show'])->name('forum.show');
+    Route::put('/comments/{comment}', [ForumController::class, 'commentUpdate'])->name('forum.comment.update');
 });
 

@@ -124,9 +124,14 @@
             <a href="{{ route('forum.index') }}" class="btn btn-secondary">Back to Forums</a>
         </div>
         <div class="col-md-8">
-                    <div class="card">
+                    <div class="card" data-aos="fade-up" data-aos-delay="100">
                 <div class="card-header d-flex justify-content-between"> 
                   <h2>{{ $post->title }}</h2> 
+                  @if(Auth::check() && (Auth::id() == $post->user_id || Auth::user()->role == 'admin'))
+                      <a href="{{ route('forum.edit', $post->id) }}" class="btn btn-link" title="Edit Post">
+                          <i class="fas fa-edit"></i> <!-- Font Awesome Edit Icon -->
+                      </a>
+                  @endif
                   @if (auth()->user()->id === $post->user_id || auth()->user()->role === 'admin')
                     <form action="{{ route('forum.destroy', $post->id) }}" method="POST" style="display:inline;">
                         @csrf
@@ -139,7 +144,9 @@
                 <div class="card-body">
                     <p>{{ $post->body }}</p>
                     @if($post->image)
-                        <img src="{{ asset('storage/' . $post->image) }}" alt="Post Image" class="img-fluid mb-2">
+                      <div style="display: flex; justify-content: center;">
+                        <img src="{{ asset('images/' . $post->image) }}" alt="post Image" style="max-width: 100%; height: auto;">
+                      </div>
                     @endif
                     <p class="text-muted">Posted by: {{ $post->user->name }}</p>
 
@@ -147,20 +154,35 @@
                     <div id="comment-section">
                         @foreach($post->comments as $comment)
                             <div class="comment mb-3" id="comment-{{ $comment->id }}">
-                                <div class="d-flex align-items-start justify-content-between">
-                                    <div class="d-flex align-items-start">
-                                        <img src="https://via.placeholder.com/40" alt="User  Avatar" class="rounded-circle me-2">
-                                        <div class="comment-body">
-                                            <h6 class="fw-bold">{{ $comment->user->name }}</h6>
-                                            <p>{{ $comment->body }}</p>
-                                        </div>
-                                    </div>
-                                    @if (auth()->user()->id === $comment->user_id || auth()->user()->role === 'admin')
-                                        <button class="btn btn-link text-danger p-0 delete-comment" data-id="{{ $comment->id }}" title="Delete Comment">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    @endif
-                                </div>
+                            <div class="d-flex align-items-start justify-content-between">
+                      
+                                  <div class="d-flex align-items-start">
+                                      <img src="https://via.placeholder.com/40" alt="User  Avatar" class="rounded-circle me-2">
+                                      <div class="comment-body">
+                                          <h6 class="fw-bold">
+                                              {{ $comment->user->name }}
+                                              @if($comment->user->role === 'doctor')
+                                                  <span class="badge bg-success ms-1">DOCTOR</span>
+                                              @endif
+                                          </h6>
+                                          <span id="comment-text-{{ $comment->id }}">{{ $comment->body }}</span> <!-- Wrap comment body in a span -->
+                                      </div>
+                                  </div>
+                                  @if (auth()->user()->id === $comment->user_id || auth()->user()->role === 'admin')
+                                      <div class="d-flex align-items-center">
+                                          <i class="fas fa-edit edit-comment" data-id="{{ $comment->id }}" title="Edit Comment" style="cursor: pointer; margin-right: 10px;"></i>
+                                          <button class="btn btn-link text-danger p-0 delete-comment" data-id="{{ $comment->id }}" title="Delete Comment">
+                                              <i class="bi bi-trash"></i>
+                                          </button>
+                                      </div>
+                                  @endif
+                                  
+                              </div>
+                              <div class="edit-comment-form" id="edit-comment-form-{{ $comment->id }}" style="display: none;">
+                                      <textarea class="form-control" id="edit-comment-body-{{ $comment->id }}">{{ $comment->body }}</textarea>
+                                      <button class="btn btn-primary save-comment" data-id="{{ $comment->id }}">Save</button>
+                                      <button class="btn btn-secondary cancel-edit" data-id="{{ $comment->id }}">Cancel</button>
+                                  </div>
                             </div>
                         @endforeach
                     </div>
@@ -287,7 +309,7 @@
   <script src="/assets/js/main.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   
-<script>
+  <script>
     // AJAX for adding a comment
     $('#comment-form').on('submit', function(e) {
         e.preventDefault(); // Prevent the form from submitting normally
@@ -302,15 +324,27 @@
                     <div class="comment mb-3" id="comment-${response.comment.id}">
                         <div class="d-flex align-items-start justify-content-between">
                             <div class="d-flex align-items-start">
-                                <img src="https://via.placeholder.com/40" alt="User  Avatar" class="rounded-circle me-2">
+                                <img src="https://via.placeholder.com/40" alt="User   Avatar" class="rounded-circle me-2">
                                 <div class="comment-body">
-                                    <h6 class="fw-bold">${response.comment.user.name}</h6>
-                                    <p>${response.comment.body}</p>
+                                    <h6 class="fw-bold">${response.comment.user.name}
+                                        ${response.comment.user.role === 'doctor' ? '<span class="badge bg-success ms-1">DOCTOR</span>' : ''}
+                                    </h6>
+                                    <span id="comment-text-${response.comment.id}">${response.comment.body}</span>
                                 </div>
                             </div>
-                            <button class="btn btn-link text-danger p-0 delete-comment" data-id="${response.comment.id}" title="Delete Comment">
-                                <i class="bi bi-trash"></i>
-                            </button>
+                            <div class="d-flex align-items-center">
+                                ${response.comment.user.id === {{ Auth::id() }} || {{ Auth::user()->role }} === 'admin' ? `
+                                    <i class="fas fa-edit edit-comment" data-id="${response.comment.id}" title="Edit Comment" style="cursor: pointer; margin-right: 10px;"></i>
+                                ` : ''}
+                                <button class="btn btn-link text-danger p-0 delete-comment" data-id="${response.comment.id}" title="Delete Comment">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="edit-comment-form" id="edit-comment-form-${response.comment.id}" style="display: none;">
+                            <textarea class="form-control" id="edit-comment-body-${response.comment.id}">${response.comment.body}</textarea>
+                            <button class="btn btn-primary save-comment" data-id="${response.comment.id}">Save</button>
+                            <button class="btn btn-secondary cancel-edit" data-id="${response.comment.id}">Cancel</button>
                         </div>
                     </div>
                 `);
@@ -332,25 +366,63 @@
         var confirmation = confirm("Are you sure you want to delete this comment?");
         
         if (confirmation) {
-          $.ajax({
-              url: '/comments/' + commentId, // Ensure this matches your route
-              type: 'DELETE',
-              data: {
-                  _token: '{{ csrf_token() }}' // Include CSRF token for security
-              },
-              success: function(response) {
-                  // Remove the comment from the DOM
-                  $('#comment-' + commentId).remove();
-                  // Show success message
-                  $('#alert-message').text(response.message).show().delay(3000).fadeOut();
-              },
-              error: function(xhr) {
-                  // Handle error response
-                  alert(xhr.responseJSON.message);
-              }
-          });
+            $.ajax({
+                url: '/comments/' + commentId, // Ensure this matches your route
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}' // Include CSRF token for security
+                },
+                success: function(response) {
+                    // Remove the comment from the DOM
+                    $('#comment-' + commentId).remove();
+                    // Show success message
+                    $('#alert-message').text(response.message).show().delay(3000).fadeOut();
+                },
+                error: function(xhr) {
+                    // Handle error response
+                    alert(xhr.responseJSON.message);
+                }
+            });
         }
     });
+
+    // Edit comment functionality
+    $(document).on('click', '.edit-comment', function() {
+        var commentId = $(this).data('id');
+        $('#comment-text-' + commentId).hide(); // Hide the comment text
+        $('#edit-comment-form-' + commentId).show(); // Show the edit form
+    });
+
+    // AJAX for saving an edited comment
+    $(document).on('click', '.save-comment', function() {
+        var commentId = $(this).data('id');
+        var updatedBody = $('#edit-comment-body-' + commentId).val();
+
+        $.ajax({
+            url: '/comments/' + commentId, // Adjust this URL to match your route
+            type: 'PUT',
+            data: {
+                _token: '{{ csrf_token() }}', // Include CSRF token for security
+                body: updatedBody
+            },
+            success: function(response) {
+                // Update the comment text in the DOM immediately
+                $('#comment-text-' + commentId).text(updatedBody).show(); // Show updated comment
+                $('#edit-comment-form-' + commentId).hide(); // Hide the edit form
+            },
+            error: function(xhr) {
+                alert(xhr.responseJSON.message); // Handle error response
+            }
+        });
+    });
+
+    // Cancel edit functionality
+    $(document).on('click', '.cancel-edit', function() {
+        var commentId = $(this).data('id');
+        $('#edit-comment-form-' + commentId).hide(); // Hide the edit form
+        $('#comment-text-' + commentId).show(); // Show the comment text
+    });
+
 </script>
 
 </body>
