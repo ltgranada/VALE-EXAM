@@ -125,22 +125,27 @@
         </div>
         <div class="col-md-8">
                     <div class="card" data-aos="fade-up" data-aos-delay="100">
-                <div class="card-header d-flex justify-content-between"> 
-                  <h2>{{ $post->title }}</h2> 
-                  @if(Auth::check() && (Auth::id() == $post->user_id || Auth::user()->role == 'admin'))
-                      <a href="{{ route('forum.edit', $post->id) }}" class="btn btn-link" title="Edit Post">
-                          <i class="fas fa-edit"></i> <!-- Font Awesome Edit Icon -->
-                      </a>
-                  @endif
-                  @if (auth()->user()->id === $post->user_id || auth()->user()->role === 'admin')
-                    <form action="{{ route('forum.destroy', $post->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-link text-danger">
-                                <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </form>
-                @endif</div>
+                    <div class="card-header d-flex justify-content-between align-items-center"> 
+                        <h2 class="mb-0">{{ $post->title }}</h2> <!-- Remove margin bottom for better alignment -->
+                        
+                        <div class="d-flex"> <!-- Flex container for buttons -->
+                            @if(Auth::check() && (Auth::id() == $post->user_id || Auth::user()->role == 'admin'))
+                                <a href="{{ route('forum.edit', $post->id) }}" class="btn btn-link" title="Edit Post">
+                                    <i class="fas fa-edit"></i> <!-- Font Awesome Edit Icon -->
+                                </a>
+                            @endif
+                            
+                            @if (auth()->user()->id === $post->user_id || auth()->user()->role === 'admin')
+                                <form action="{{ route('forum.destroy', $post->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-link text-danger ms-2"> <!-- Add margin start for spacing -->
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
                 <div class="card-body">
                     <p>{{ $post->body }}</p>
                     @if($post->image)
