@@ -165,6 +165,7 @@
                 </div>
                 <div class="text-center mt-4">
                     <a href="/medicines" class="btn btn-primary">Continue Shopping</a>
+                    <a href="{{ route('checkout.index') }}" class="btn btn-primary">Check Out</a>
                 </div>
             </div>
 </section>

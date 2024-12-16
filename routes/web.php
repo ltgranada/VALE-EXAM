@@ -70,6 +70,12 @@ Route::middleware([
     Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
     Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout.index');
+    Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+
+    Route::post('/checkout/process', [OrderController::class, 'processCheckout'])->name('checkout.process');
+    Route::get('/payment', [OrderController::class, 'showPaymentPage'])->name('payment.show');
 });
 
 Route::middleware('isAdmin:admin')->group(function(){

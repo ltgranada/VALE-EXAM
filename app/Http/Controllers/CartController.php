@@ -85,5 +85,56 @@ class CartController extends Controller
 
         return response()->json(['success' => false, 'message' => 'Item not found.'], 404);
     }
+
+
+    //CHECKOUT CONTROLLER CODES
+    // Method to display the checkout page
+    public function checkout()
+    {
+    // Retrieve the authenticated user
+    $user = Auth::user();
+    $userId = Auth::id();
+
+    // Retrieve cart items from the session
+    $cart = Cart::where('user_id', $userId)->with('medicine')->get();
     
+    // Calculate the total
+    $total = 0;
+    foreach ($cart as $item) {
+        $total += $item->medicine->price * $item->quantity; // Assuming each Cart item has a relationship with Medicine
+    }
+
+    // Pass the user and cart to the view
+    return view('checkout', compact('user', 'cart', 'total'));
+    }
+
+    // Method to process the checkout form submission
+    public function processCheckout(Request $request)
+    {
+        // Validate the checkout information
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:15',
+            'address' => 'required|string|max:255',
+        ]);
+
+        // Store the checkout information in the session or process it as needed
+        session(['checkout_info' => $request->all()]);
+
+        // Redirect to the pay page
+        return redirect()->route('payment.show');
+    }
+
+    // Helper method to calculate the total from the cart
+    private function calculateTotal($cart)
+    {
+        $total = 0;
+        foreach ($cart as $item) {
+            $total += $item->medicine->price * $item->quantity;
+        }
+        return $total;
+    }
+    
+
 }
