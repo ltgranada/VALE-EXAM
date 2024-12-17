@@ -72,9 +72,10 @@ Route::middleware([
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 
     Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout.index');
-    Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+    Route::post('/checkout/process', [CartController::class, 'processCheckout'])->name('checkout.process');
+    Route::get('/checkout/process-payment', [CartController::class, 'processPayment'])->name('checkout.process-payment');
 
-    Route::post('/checkout/process', [OrderController::class, 'processCheckout'])->name('checkout.process');
+//    Route::post('/checkout/process', [OrderController::class, 'processCheckout'])->name('checkout.process');
     Route::get('/payment', [OrderController::class, 'showPaymentPage'])->name('payment.show');
 });
 
