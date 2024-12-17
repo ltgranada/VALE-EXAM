@@ -250,33 +250,38 @@ class CartController extends Controller
         if ($request->query('token') == null) {
             return redirect()->route('checkout.index');
         }
-
+    
         $transactionId = base64_decode(request('id'));
         $transaction = Transaction::findOrFail($transactionId);
-
+    
         // Check if the transaction is already paid
         $payment = $this->capturePaymentOrder($request->query('token'));
-
+    
         if ($payment['status'] != 'COMPLETED') {
             return redirect()->route('checkout.index')->with('error', 'Payment failed. Please try again.');
         }
-
-        // Update the transaction status
+    
+        // Update the transaction status to 'pending'
         DB::beginTransaction();
-
-        $transaction->payment()->create([
+    
+        // Set the transaction status to 'pending'
+        $transaction->status = 'pending';
+        $transaction->save(); // Save the updated transaction status
+    
+        // Create the payment record
+        $transaction->payments()->create([
             'payment_id' => $payment['purchase_units'][0]['payments']['captures'][0]['id'],
             'amount_paid' => $payment['purchase_units'][0]['payments']['captures'][0]['seller_receivable_breakdown']['gross_amount']['value'],
             'net_amount' => $payment['purchase_units'][0]['payments']['captures'][0]['seller_receivable_breakdown']['net_amount']['value'],
             'fee' => $payment['purchase_units'][0]['payments']['captures'][0]['seller_receivable_breakdown']['paypal_fee']['value'],
             'status' => 'paid',
         ]);
-
+    
         DB::commit();
-
+    
         // Clear cart contents
         Cart::where('user_id', Auth::id())->delete();
-
+    
         return redirect()->route('checkout.index')->with('success', 'Payment successful. Thank you for your purchase!');
     }
 
@@ -305,6 +310,31 @@ class CartController extends Controller
         }
         return $total;
     }
-
+    
+    public function transactionStatus()
+    {
+        $userId = Auth::id();
+    
+        // Fetch transactions for the authenticated user
+        $transactions = Transaction::where('user_id', $userId)->get();
+    
+        // Initialize Collections for different statuses
+        $toShip = collect(); // Initialize as a Collection
+        $toReceive = collect(); // Initialize as a Collection
+        $completed = collect(); // Initialize as a Collection
+    
+        foreach ($transactions as $transaction) {
+            // Check the status of the transaction
+            if ($transaction->status === 'completed') {
+                $completed->push($transaction);
+            } elseif ($transaction->status === 'pending') {
+                $toShip->push($transaction);
+            } elseif ($transaction->status === 'to_receive') {
+                $toReceive->push($transaction);
+            }
+        }
+    
+        return view('transaction_status', compact('toShip', 'toReceive', 'completed'));
+    }
 
 }
