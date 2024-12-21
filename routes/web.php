@@ -77,6 +77,9 @@ Route::middleware([
 
 //    Route::post('/checkout/process', [OrderController::class, 'processCheckout'])->name('checkout.process');
     Route::get('/payment', [OrderController::class, 'showPaymentPage'])->name('payment.show');
+
+    Route::get('/transaction-status', [CartController::class, 'transactionStatus'])->name('transaction.status');
+    Route::post('/update-status/{id}/{status}', [CartController::class, 'updateTransactionStatus'])->name('transaction.updateStatus');
 });
 
 Route::middleware('isAdmin:admin')->group(function(){
