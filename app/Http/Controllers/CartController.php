@@ -264,10 +264,6 @@ class CartController extends Controller
         // Update the transaction status to 'pending'
         DB::beginTransaction();
     
-        // Set the transaction status to 'pending'
-        $transaction->status = 'pending';
-        $transaction->save(); // Save the updated transaction status
-    
         // Create the payment record
         $transaction->payments()->create([
             'payment_id' => $payment['purchase_units'][0]['payments']['captures'][0]['id'],
@@ -276,13 +272,17 @@ class CartController extends Controller
             'fee' => $payment['purchase_units'][0]['payments']['captures'][0]['seller_receivable_breakdown']['paypal_fee']['value'],
             'status' => 'paid',
         ]);
-    
+ 
         DB::commit();
+
+                // Set the transaction status to 'pending'
+                $transaction->status = 'pending';
+                $transaction->save(); // Save the updated transaction status
     
         // Clear cart contents
         Cart::where('user_id', Auth::id())->delete();
     
-        return redirect()->route('checkout.index')->with('success', 'Payment successful. Thank you for your purchase!');
+        return redirect()->route('transaction.status')->with('success', 'Payment successful. Thank you for your purchase!');
     }
 
     private function capturePaymentOrder($token)
@@ -333,8 +333,82 @@ class CartController extends Controller
                 $toReceive->push($transaction);
             }
         }
-    
-        return view('transaction_status', compact('toShip', 'toReceive', 'completed'));
+
+        // Fetch all transactions for admin view
+        $allTransactions = Transaction::all(); // This retrieves all transactions
+
+        // Pass the transactions and user role to the view
+        return view('transaction_status', compact('toShip', 'toReceive', 'completed', 'allTransactions'));
     }
 
+    public function myTransactions()
+    {
+        // Get the authenticated user
+        $user = auth()->user();
+    
+        // Retrieve transactions for the authenticated user
+        $toShip = Transaction::where('user_id', $user->id)
+            ->where('status', 'to_ship') // Assuming 'to_ship' is the status for transactions to ship
+            ->paginate(4);
+    
+        $toReceive = Transaction::where('user_id', $user->id)
+            ->where('status', 'to_receive') // Assuming 'to_receive' is the status for transactions to receive
+            ->paginate(4);
+    
+        $completed = Transaction::where('user_id', $user->id)
+            ->where('status', 'completed') // Assuming 'completed' is the status for completed transactions
+            ->paginate(4);
+    
+        // Pass the transactions and user role to the view
+        return view('transaction_status', [
+            'toShip' => $toShip,
+            'toReceive' => $toReceive,
+            'completed' => $completed,
+            'role' => $user->role, // Assuming 'role' is a column in the users table
+        ]);
+    }
+
+// Define valid statuses as a constant
+const VALID_STATUSES = [
+    'pending',
+    'completed',
+    'to_receive',
+];
+
+public function updateTransactionStatus($id, $newStatus)
+{
+    // Check if the new status is valid
+    if (!in_array($newStatus, self::VALID_STATUSES)) {
+        return redirect()->route('transaction.status')->with('error', 'Invalid status provided.');
+    }
+
+    // Find the transaction by ID
+    $transaction = Transaction::find($id);
+
+    // Check if the transaction exists
+    if (!$transaction) {
+        return redirect()->route('transaction.status')->with('error', 'Transaction not found.');
+    }
+
+    // Log the current status before the update
+    Log::info('Current Status Before Update: ' . $transaction->status);
+
+    // Explicitly set the status to the new value
+    $transaction->status = $newStatus;
+
+    // Save the transaction
+    $saved = $transaction->save();
+
+    // Log the status after the update
+    Log::info('Status After Update: ' . $transaction->status);
+    Log::info('Save Operation Result: ' . ($saved ? 'Success' : 'Failed'));
+
+    // Return a response based on the save operation
+    if ($saved) {
+        return redirect()->route('transaction.status')->with('success', 'Status updated to: ' . $newStatus);
+    } else {
+        return redirect()->route('transaction.status')->with('error', 'Failed to update status.');
+    }
+}
+    
 }

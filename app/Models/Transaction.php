@@ -38,22 +38,4 @@ class Transaction extends Model
         return $this->hasMany(TransactionPayment::class, 'transaction_id', 'id');
         return $this->hasMany(Payment::class);
     }
-
-    // Automatically set the status based on payment status
-    public static function boot()
-    {
-        parent::boot();
-
-        static::saving(function ($transaction) {
-            // Check if there are any payments associated with this transaction
-            $payments = $transaction->payments;
-
-            // Determine the status based on payment status
-            if ($payments->contains('status', 'paid')) {
-                $transaction->status = 'To Ship';
-            } else {
-                $transaction->status = ''; // Leave it blank if not paid
-            }
-        });
-    }
 }

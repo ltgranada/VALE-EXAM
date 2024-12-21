@@ -122,7 +122,7 @@
   <section id="doctors" class="doctors section">
     <div class="container">
         <h1>Transaction Status</h1>
-
+        @if(auth()->user()->role == 'user')
         <div class="row">
             @if($toShip->isEmpty() && $toReceive->isEmpty() && $completed->isEmpty())
                 <div class="col-12">
@@ -184,6 +184,48 @@
                 </div>
             @endif
         </div>
+        @elseif(auth()->user()->role == 'admin')
+        @if($allTransactions->isEmpty())
+                <p>No transactions available.</p>
+            @else
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Total Price</th>
+                            <th>Customer Name</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($allTransactions as $transaction)
+                            <tr>
+                                <td>{{ $transaction->id }}</td>
+                                <td>{{ $transaction->total_price }}</td>
+                                <td>{{ $transaction->customer_name }}</td>
+                                <td>{{ $transaction->status }}</td>
+                                <td>
+                                    @if($transaction->status === 'pending')
+                                    <form action="{{ route('transaction.updateStatus', ['id' => $transaction->id, 'status' => 'to_receive']) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary">Mark as To Receive</button>
+                                    </form>
+                                    @elseif($transaction->status === 'to_receive')
+                                    <form action="{{ route('transaction.updateStatus', ['id' => $transaction->id, 'status' => 'completed']) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success">Mark as Completed</button>
+                                    </form>
+                                    @else
+                                        <p>No actions available for this status.</p>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        @endif
     </div>
 </section>
 </main>
