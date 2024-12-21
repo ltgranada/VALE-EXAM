@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>GRANADA's DRUGS</title>
+  <title>DRUG THRU</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
@@ -57,7 +57,7 @@
     <div class="topbar d-flex align-items-center">
       <div class="container d-flex justify-content-center justify-content-md-between">
         <div class="contact-info d-flex align-items-center">
-          <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:contact@example.com">luisenrico.granada.cics@ust.edu.ph</a></i>
+          <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:contact@example.com">contact@drugthru.org</a></i>
           <i class="bi bi-phone d-flex align-items-center ms-4"><span>+02 7576 1371</span></i>
         </div>
         <div class="social-links d-none d-md-flex align-items-center">
@@ -72,27 +72,20 @@
     <div class="branding d-flex align-items-center">
 
     <div class="container position-relative d-flex align-items-center justify-content-between">
-      <img src="/assets/img/drug.png" alt="logo" width="60" height="75" >
-      <a href="index.html" class="logo align-items-center me-auto">
-          <!-- Uncomment the line below if you also wish to use an image logo -->
-          
-          <h1 class="sitename">GRANADA's DRUGS</h1>
+    <a href="http://127.0.0.1:8000/" class="logo align-items-center me-auto">
+      <img src="/assets/img/drug.png" alt="logo" width="180" height="100">
+      
+         
         </a>
         
 
         <nav id="navmenu" class="navmenu">
           <ul>
-            <li><a href="http://127.0.0.1:8000/">Home<br></a></li>
-            <li><a href="http://127.0.0.1:8000/about"   class="active">About</a></li>
-            <li><a href="http://127.0.0.1:8000/medicines">Medicines</a></li>
+            <li><a href="http://127.0.0.1:8000/" >Home<br></a></li>
+            <li><a href="http://127.0.0.1:8000/about">About</a></li>
+            <li><a href="http://127.0.0.1:8000/medicines">Gamot Padala</a></li>
             <li><a href="http://127.0.0.1:8000/doctors">Doctors</a></li>
-            <li class="dropdown"><a href="http://127.0.0.1:8000/services"><span>Services</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-              <ul>
-                <li><a href="http://127.0.0.1:8000/padala">Gamot Padala</a></li>
-                <li><a href="http://127.0.0.1:8000/appointment">Book a Consultation</a></li>
-                <li><a href="http://127.0.0.1:8000/inquiry">Medicine Inquiry</a></li>
-              </ul>
-            </li>
+            <li><a href="http://127.0.0.1:8000/forum">Forum</a></li>
             <li><a href="http://127.0.0.1:8000/contact">Contact</a></li>
           </ul>
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
@@ -113,10 +106,6 @@
 
     </div>
     
-
-            
-
-  </header>
 
   <main class="main">
 
@@ -158,6 +147,7 @@
         @endif
     </div>
 </div>
+</header>
 
 
   </main>

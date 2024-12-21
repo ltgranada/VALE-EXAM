@@ -90,6 +90,14 @@
                                 {{ __('User Contacts') }}
                             </x-dropdown-link>
 
+                            <x-dropdown-link href="{{ route('cart.index') }}">
+                                {{ __('Your Cart') }}
+                            </x-dropdown-link>
+
+                            <x-dropdown-link href="{{ route('transaction.status') }}">
+                                {{ __('Orders') }}
+                            </x-dropdown-link>
+
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                 <x-dropdown-link href="{{ route('api-tokens.index') }}">
                                     {{ __('API Tokens') }}
