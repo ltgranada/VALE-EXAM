@@ -258,8 +258,9 @@ button[type="submit"]:hover {
                         @else
                             <p>No image available.</p>
                         @endif
-                        <p>Name: {{ $medicine->name }}</p>
-                        <p>Price: ₱{{ number_format($medicine->price, 2) }}</p>
+                        <br/>
+                        <p  style="font-size:20px; font-weight: bold;">{{ $medicine->name }}</p>
+                        <p style="font-size:15px;">₱{{ number_format($medicine->price, 2) }}</p>
                     </div>
                 </div>
             </a>
