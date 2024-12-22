@@ -39,6 +39,23 @@ Route::get('/create', [MedicineController::class, 'create'])->name('medicines.cr
 Route::post('/medicines', [MedicineController::class, 'store'])->name('medicines.store');
 Route::get('/medicines/{id}/show', [MedicineController::class, 'show'])->name('medicine.show');
 
+Route::middleware('isAdmin:admin')->group(function(){
+    Route::get('/contact-list', [ContactController::class, 'index'])->name('contacts.index');
+    Route::get('/contact', [ContactController::class, 'create'])->name('contact');
+    Route::get('/contact/edit', [ContactController::class, 'edit'])->name('contacts.edit');
+    Route::get('/contacts/{id}', [ContactController::class, 'show'])->name('contacts.show');
+    Route::get('/contacts/{id}/edit', [ContactController::class, 'edit'])->name('contacts.edit');
+    Route::put('/contacts/{id}', [ContactController::class, 'update'])->name('contacts.update');
+    Route::delete('/contacts/{id}', [ContactController::class, 'destroy'])->name('contacts.destroy');
+    Route::delete('/contacts/{id}/confirmed', [ContactController::class, 'destroyConfirmed'])->name('contacts.destroy.confirmed');
+
+    Route::get('/medicines/{id}/edit', [MedicineController::class, 'edit'])->name('medicines.edit');
+    Route::put('/medicines/{id}', [MedicineController::class, 'update'])->name('medicines.update');
+    Route::delete('/medicines/{id}', [MedicineController::class, 'destroy'])->name('medicines.destroy');
+
+    Route::get('/forum/admin', [ForumController::class, 'adminIndex'])->name('forum.adminIndex');
+});
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -70,6 +87,11 @@ Route::middleware([
     Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
     Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    Route::get('/contacts/{id}', [ContactController::class, 'show'])->name('contacts.show');
+    Route::get('/contacts/{id}/edit', [ContactController::class, 'edit'])->name('contacts.edit');
+    Route::put('/contacts/{id}', [ContactController::class, 'update'])->name('contacts.update');
+    Route::delete('/contacts/{id}', [ContactController::class, 'destroy'])->name('contacts.destroy');
+    Route::delete('/contacts/{id}/confirmed', [ContactController::class, 'destroyConfirmed'])->name('contacts.destroy.confirmed');
 
     Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout.index');
     Route::post('/checkout/process', [CartController::class, 'processCheckout'])->name('checkout.process');
@@ -80,24 +102,11 @@ Route::middleware([
 
     Route::get('/transaction-status', [CartController::class, 'transactionStatus'])->name('transaction.status');
     Route::post('/update-status/{id}/{status}', [CartController::class, 'updateTransactionStatus'])->name('transaction.updateStatus');
-});
-
-Route::middleware('isAdmin:admin')->group(function(){
-    Route::get('/contact-list', [ContactController::class, 'index'])->name('contacts.index');
     Route::get('/contact', [ContactController::class, 'create'])->name('contact');
-    Route::get('/contact/edit', [ContactController::class, 'edit'])->name('contacts.edit');
-    Route::get('/contacts/{id}', [ContactController::class, 'show'])->name('contacts.show');
-    Route::get('/contacts/{id}/edit', [ContactController::class, 'edit'])->name('contacts.edit');
-    Route::put('/contacts/{id}', [ContactController::class, 'update'])->name('contacts.update');
-    Route::delete('/contacts/{id}', [ContactController::class, 'destroy'])->name('contacts.destroy');
-    Route::delete('/contacts/{id}/confirmed', [ContactController::class, 'destroyConfirmed'])->name('contacts.destroy.confirmed');
 
-    Route::get('/medicines/{id}/edit', [MedicineController::class, 'edit'])->name('medicines.edit');
-    Route::put('/medicines/{id}', [MedicineController::class, 'update'])->name('medicines.update');
-    Route::delete('/medicines/{id}', [MedicineController::class, 'destroy'])->name('medicines.destroy');
-
-    Route::get('/forum/admin', [ForumController::class, 'adminIndex'])->name('forum.adminIndex');
 });
+
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
